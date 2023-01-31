@@ -1,32 +1,50 @@
-This is [Cntlm](http://cntlm.sourceforge.net/) **with Kerberos patch applied**.
+# cntlm-gss
 
-Works on a Ubuntu 12.04 box, at least for me.
+This is [Cntlm](http://cntlm.sourceforge.net/) **with Kerberos patch applied**, and **syslog** logging removed.
 
-Dependency: [Kerberos](http://web.mit.edu/kerberos/).
+ - Works on a Ubuntu 12.04 box, at least for me.
+ - Works on a RedHat EL 7.9, at least for @giupo.
 
-If Kerberos is compiled to a different location, say, $HOME/usr, compile Cntlm with
+Dependency: 
+  - [Kerberos](https://web.mit.edu/kerberos/).
+  - [zf_log](https://github.com/wonder-mice/zf_log)
 
-`./configure --enable-kerberos`
+#  How to compile
 
-`export LIBRARY_PATH=$HOME/usr/lib`
+**FIRST OF ALL** : clonw this repo with:
 
-`export C_INCLUDE_PATH=$HOME/usr/include`
+`git clone --recursive https://github.com/giupo/cntlm-gss`
 
-`make`
+(we have a dependency on zf_log)
 
-To run it, try `cntlm --help` or `cntlm -v` and fix whatever it complains.
+After cloning, do the usual `cmake` dance (assuming you are in the project root):
+
+  ```
+  mkdir build && cd build
+  cmake ..
+  make
+  ```
+
+The compiled `cntlm` executable is under `build/src`: to run it, try `src/cntlm --help` or `src/cntlm -v`
+and fix whatever it complains.
+
+# Kerberos support
+
+If you need kerberos support, modify the previous `cmake ..` command with `cmake .. -DWITH_KERBEROS` and compile with `make` as usual.
+
+# configuration file
 
 I have only the following lines in my ctnlm.conf file:
 
-```
-Username	
-Domain		
-Password	
-Proxy		proxy.server.domain.com:3128
-NoProxy		localhost, 127.0.0.*, 10.*, 192.168.*
-Listen		3128
-```
+  ```
+  Username	
+  Domain		
+  Password	
+  Proxy		proxy.server.domain.com:3128
+  NoProxy		localhost, 127.0.0.*, 10.*, 192.168.*
+  Listen		3128
+  ```
 
-The username, domain and password are all unset.
+The username, domain and password are all erased for good.
 
-I could start it with `/home/me/usr/opt/cntlm-0.92.3/cntlm -a gss -c /home/me/usr/opt/cntlm-0.92.3/cntlm.conf` .
+I could start it with `src/cntlm -a gss -c /path/to/cntlm.conf` .
