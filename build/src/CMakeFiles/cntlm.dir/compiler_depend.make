@@ -56,6 +56,7 @@ src/CMakeFiles/cntlm.dir/acl.c.o: /home/user/m024000/cntlm-gss/src/acl.c \
   /usr/include/sched.h \
   /usr/include/bits/sched.h \
   /usr/include/bits/setjmp.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/socket.h \
   /home/user/m024000/cntlm-gss/src/swap.h
 
@@ -115,7 +116,10 @@ src/CMakeFiles/cntlm.dir/auth.c.o: /home/user/m024000/cntlm-gss/src/auth.c \
   /usr/include/asm/sockios.h \
   /usr/include/asm-generic/sockios.h \
   /usr/include/bits/in.h \
-  /home/user/m024000/cntlm-gss/src/auth.h
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
+  /home/user/m024000/cntlm-gss/src/auth.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/config.c.o: /home/user/m024000/cntlm-gss/src/config.c \
   /usr/include/stdc-predef.h \
@@ -175,8 +179,11 @@ src/CMakeFiles/cntlm.dir/config.c.o: /home/user/m024000/cntlm-gss/src/config.c \
   /usr/include/asm/sockios.h \
   /usr/include/asm-generic/sockios.h \
   /usr/include/bits/in.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/auth.h \
-  /home/user/m024000/cntlm-gss/src/config.h
+  /home/user/m024000/cntlm-gss/src/config.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/direct.c.o: /home/user/m024000/cntlm-gss/src/direct.c \
   /usr/include/stdc-predef.h \
@@ -223,9 +230,6 @@ src/CMakeFiles/cntlm.dir/direct.c.o: /home/user/m024000/cntlm-gss/src/direct.c \
   /usr/include/bits/confname.h \
   /usr/include/getopt.h \
   /usr/include/string.h \
-  /usr/include/syslog.h \
-  /usr/include/sys/syslog.h \
-  /usr/include/bits/syslog-path.h \
   /usr/include/netinet/in.h \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
   /usr/include/stdint.h \
@@ -253,6 +257,7 @@ src/CMakeFiles/cntlm.dir/direct.c.o: /home/user/m024000/cntlm-gss/src/direct.c \
   /usr/include/rpc/netdb.h \
   /usr/include/bits/netdb.h \
   /home/user/m024000/cntlm-gss/src/utils.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/globals.h \
   /home/user/m024000/cntlm-gss/src/auth.h \
   /home/user/m024000/cntlm-gss/src/http.h \
@@ -261,7 +266,9 @@ src/CMakeFiles/cntlm.dir/direct.c.o: /home/user/m024000/cntlm-gss/src/direct.c \
   /home/user/m024000/cntlm-gss/src/xcrypt.h \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h \
   /home/user/m024000/cntlm-gss/src/direct.h \
-  /home/user/m024000/cntlm-gss/src/pages.h
+  /home/user/m024000/cntlm-gss/src/pages.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/forward.c.o: /home/user/m024000/cntlm-gss/src/forward.c \
   /usr/include/stdc-predef.h \
@@ -308,9 +315,6 @@ src/CMakeFiles/cntlm.dir/forward.c.o: /home/user/m024000/cntlm-gss/src/forward.c
   /usr/include/bits/confname.h \
   /usr/include/getopt.h \
   /usr/include/string.h \
-  /usr/include/syslog.h \
-  /usr/include/sys/syslog.h \
-  /usr/include/bits/syslog-path.h \
   /usr/include/netinet/in.h \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
   /usr/include/stdint.h \
@@ -329,6 +333,7 @@ src/CMakeFiles/cntlm.dir/forward.c.o: /home/user/m024000/cntlm-gss/src/forward.c
   /usr/include/arpa/inet.h \
   /usr/include/strings.h \
   /home/user/m024000/cntlm-gss/src/utils.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/globals.h \
   /home/user/m024000/cntlm-gss/src/auth.h \
   /home/user/m024000/cntlm-gss/src/http.h \
@@ -338,7 +343,9 @@ src/CMakeFiles/cntlm.dir/forward.c.o: /home/user/m024000/cntlm-gss/src/forward.c
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h \
   /home/user/m024000/cntlm-gss/src/forward.h \
   /home/user/m024000/cntlm-gss/src/scanner.h \
-  /home/user/m024000/cntlm-gss/src/pages.h
+  /home/user/m024000/cntlm-gss/src/pages.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/http.c.o: /home/user/m024000/cntlm-gss/src/http.c \
   /usr/include/stdc-predef.h \
@@ -410,76 +417,35 @@ src/CMakeFiles/cntlm.dir/http.c.o: /home/user/m024000/cntlm-gss/src/http.c \
   /usr/include/asm/sockios.h \
   /usr/include/asm-generic/sockios.h \
   /usr/include/bits/in.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/socket.h \
   /home/user/m024000/cntlm-gss/src/ntlm.h \
   /home/user/m024000/cntlm-gss/src/xcrypt.h \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h \
   /home/user/m024000/cntlm-gss/src/auth.h \
-  /home/user/m024000/cntlm-gss/src/http.h
+  /home/user/m024000/cntlm-gss/src/http.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
-src/CMakeFiles/cntlm.dir/kerberos.c.o: /home/user/m024000/cntlm-gss/src/kerberos.c \
+src/CMakeFiles/cntlm.dir/logger.c.o: /home/user/m024000/cntlm-gss/src/logger.c \
   /usr/include/stdc-predef.h \
-  /home/user/m024000/cntlm-gss/src/globals.h \
-  /usr/include/pthread.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h \
+  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h \
+  /usr/include/stdio.h \
   /usr/include/features.h \
   /usr/include/sys/cdefs.h \
   /usr/include/bits/wordsize.h \
   /usr/include/gnu/stubs.h \
   /usr/include/gnu/stubs-64.h \
-  /usr/include/endian.h \
-  /usr/include/bits/endian.h \
-  /usr/include/bits/byteswap.h \
+  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h \
   /usr/include/bits/types.h \
   /usr/include/bits/typesizes.h \
-  /usr/include/bits/byteswap-16.h \
-  /usr/include/sched.h \
-  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stddef.h \
-  /usr/include/time.h \
-  /usr/include/bits/sched.h \
-  /usr/include/bits/time.h \
-  /usr/include/xlocale.h \
-  /usr/include/bits/pthreadtypes.h \
-  /usr/include/bits/setjmp.h \
-  /home/user/m024000/cntlm-gss/src/utils.h \
-  /usr/include/netinet/in.h \
-  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
-  /usr/include/stdint.h \
-  /usr/include/bits/wchar.h \
-  /usr/include/sys/socket.h \
-  /usr/include/sys/uio.h \
-  /usr/include/sys/types.h \
-  /usr/include/sys/select.h \
-  /usr/include/bits/select.h \
-  /usr/include/bits/sigset.h \
-  /usr/include/sys/sysmacros.h \
-  /usr/include/bits/uio.h \
-  /usr/include/bits/socket.h \
-  /usr/include/bits/socket_type.h \
-  /usr/include/bits/sockaddr.h \
-  /usr/include/asm/socket.h \
-  /usr/include/asm-generic/socket.h \
-  /usr/include/asm/sockios.h \
-  /usr/include/asm-generic/sockios.h \
-  /usr/include/bits/in.h \
-  /home/user/m024000/cntlm-gss/src/auth.h \
-  /home/user/m024000/cntlm-gss/src/kerberos.h \
-  /usr/include/string.h \
-  /usr/include/stdio.h \
   /usr/include/libio.h \
   /usr/include/_G_config.h \
   /usr/include/wchar.h \
-  /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h \
   /usr/include/bits/stdio_lim.h \
-  /usr/include/bits/sys_errlist.h \
-  /usr/include/syslog.h \
-  /usr/include/sys/syslog.h \
-  /usr/include/bits/syslog-path.h \
-  /usr/include/gssapi/gssapi.h \
-  /usr/include/stdlib.h \
-  /usr/include/bits/waitflags.h \
-  /usr/include/bits/waitstatus.h \
-  /usr/include/alloca.h \
-  /usr/include/bits/stdlib-float.h
+  /usr/include/bits/sys_errlist.h
 
 src/CMakeFiles/cntlm.dir/main.c.o: /home/user/m024000/cntlm-gss/src/main.c \
   /usr/include/stdc-predef.h \
@@ -568,27 +534,27 @@ src/CMakeFiles/cntlm.dir/main.c.o: /home/user/m024000/cntlm-gss/src/main.c \
   /usr/include/fcntl.h \
   /usr/include/bits/fcntl.h \
   /usr/include/bits/fcntl-linux.h \
-  /usr/include/syslog.h \
-  /usr/include/sys/syslog.h \
-  /usr/include/bits/syslog-path.h \
   /usr/include/termios.h \
   /usr/include/bits/termios.h \
   /usr/include/sys/ttydefaults.h \
   /usr/include/fnmatch.h \
-  /home/user/m024000/cntlm-gss/src/socket.h \
+  /home/user/m024000/cntlm-gss/src/config.h \
   /home/user/m024000/cntlm-gss/src/utils.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
+  /home/user/m024000/cntlm-gss/src/socket.h \
   /home/user/m024000/cntlm-gss/src/ntlm.h \
   /home/user/m024000/cntlm-gss/src/xcrypt.h \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h \
   /home/user/m024000/cntlm-gss/src/auth.h \
   /home/user/m024000/cntlm-gss/src/swap.h \
-  /home/user/m024000/cntlm-gss/src/config.h \
   /home/user/m024000/cntlm-gss/src/acl.h \
   /home/user/m024000/cntlm-gss/src/http.h \
   /home/user/m024000/cntlm-gss/src/globals.h \
   /home/user/m024000/cntlm-gss/src/pages.h \
   /home/user/m024000/cntlm-gss/src/forward.h \
-  /home/user/m024000/cntlm-gss/src/direct.h
+  /home/user/m024000/cntlm-gss/src/direct.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/ntlm.c.o: /home/user/m024000/cntlm-gss/src/ntlm.c \
   /usr/include/stdc-predef.h \
@@ -650,7 +616,10 @@ src/CMakeFiles/cntlm.dir/ntlm.c.o: /home/user/m024000/cntlm-gss/src/ntlm.c \
   /usr/include/asm/sockios.h \
   /usr/include/asm-generic/sockios.h \
   /usr/include/bits/in.h \
-  /home/user/m024000/cntlm-gss/src/swap.h
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
+  /home/user/m024000/cntlm-gss/src/swap.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/pages.c.o: /home/user/m024000/cntlm-gss/src/pages.c \
   /usr/include/stdc-predef.h \
@@ -695,6 +664,7 @@ src/CMakeFiles/cntlm.dir/pages.c.o: /home/user/m024000/cntlm-gss/src/pages.c \
   /usr/include/asm/sockios.h \
   /usr/include/asm-generic/sockios.h \
   /usr/include/bits/in.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /usr/include/string.h \
   /usr/include/stdio.h \
   /usr/include/libio.h \
@@ -768,12 +738,15 @@ src/CMakeFiles/cntlm.dir/scanner.c.o: /home/user/m024000/cntlm-gss/src/scanner.c
   /usr/include/asm/sockios.h \
   /usr/include/asm-generic/sockios.h \
   /usr/include/bits/in.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/socket.h \
   /home/user/m024000/cntlm-gss/src/http.h \
   /home/user/m024000/cntlm-gss/src/auth.h \
   /home/user/m024000/cntlm-gss/src/globals.h \
   /home/user/m024000/cntlm-gss/src/forward.h \
-  /home/user/m024000/cntlm-gss/src/scanner.h
+  /home/user/m024000/cntlm-gss/src/scanner.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/socket.c.o: /home/user/m024000/cntlm-gss/src/socket.c \
   /usr/include/stdc-predef.h \
@@ -846,14 +819,14 @@ src/CMakeFiles/cntlm.dir/socket.c.o: /home/user/m024000/cntlm-gss/src/socket.c \
   /usr/include/netdb.h \
   /usr/include/rpc/netdb.h \
   /usr/include/bits/netdb.h \
-  /usr/include/syslog.h \
-  /usr/include/sys/syslog.h \
-  /usr/include/bits/syslog-path.h \
   /home/user/m024000/cntlm-gss/src/utils.h \
   /usr/include/pthread.h \
   /usr/include/sched.h \
   /usr/include/bits/sched.h \
-  /usr/include/bits/setjmp.h
+  /usr/include/bits/setjmp.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/utils.c.o: /home/user/m024000/cntlm-gss/src/utils.c \
   /usr/include/stdc-predef.h \
@@ -914,9 +887,7 @@ src/CMakeFiles/cntlm.dir/utils.c.o: /home/user/m024000/cntlm-gss/src/utils.c \
   /usr/include/asm-generic/errno.h \
   /usr/include/asm-generic/errno-base.h \
   /usr/include/ctype.h \
-  /usr/include/syslog.h \
-  /usr/include/sys/syslog.h \
-  /usr/include/bits/syslog-path.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h \
   /home/user/m024000/cntlm-gss/src/swap.h \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdint.h \
   /usr/include/stdint.h \
@@ -928,7 +899,9 @@ src/CMakeFiles/cntlm.dir/utils.c.o: /home/user/m024000/cntlm-gss/src/utils.c \
   /usr/include/bits/setjmp.h \
   /usr/include/netinet/in.h \
   /usr/include/bits/in.h \
-  /home/user/m024000/cntlm-gss/src/socket.h
+  /home/user/m024000/cntlm-gss/src/socket.h \
+  /home/user/m024000/cntlm-gss/src/logger.h \
+  /home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h
 
 src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
   /usr/include/stdc-predef.h \
@@ -971,7 +944,8 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
   /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdarg.h \
   /usr/include/bits/stdio_lim.h \
   /usr/include/bits/sys_errlist.h \
-  /home/user/m024000/cntlm-gss/src/swap.h
+  /home/user/m024000/cntlm-gss/src/swap.h \
+  /home/user/m024000/cntlm-gss/src/configured_constants.h
 
 
 /home/user/m024000/cntlm-gss/src/scanner.c:
@@ -1008,11 +982,7 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
 
 /usr/include/sys/stat.h:
 
-/usr/include/gssapi/gssapi.h:
-
-/home/user/m024000/cntlm-gss/src/kerberos.h:
-
-/home/user/m024000/cntlm-gss/src/kerberos.c:
+/usr/include/sys/time.h:
 
 /usr/include/stdint.h:
 
@@ -1049,6 +1019,8 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
 /usr/include/bits/byteswap.h:
 
 /usr/include/asm/socket.h:
+
+/home/user/m024000/cntlm-gss/zf_log/zf_log/zf_log.h:
 
 /usr/include/bits/netdb.h:
 
@@ -1091,6 +1063,10 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
 /usr/include/alloca.h:
 
 /usr/include/netinet/in.h:
+
+/home/user/m024000/cntlm-gss/src/http.c:
+
+/usr/include/stdc-predef.h:
 
 /usr/include/pthread.h:
 
@@ -1162,9 +1138,9 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
 
 /usr/lib/gcc/x86_64-redhat-linux/4.8.5/include/stdbool.h:
 
-/home/user/m024000/cntlm-gss/src/socket.h:
+/home/user/m024000/cntlm-gss/src/configured_constants.h:
 
-/usr/include/sys/time.h:
+/home/user/m024000/cntlm-gss/src/socket.h:
 
 /home/user/m024000/cntlm-gss/src/xcrypt.c:
 
@@ -1186,6 +1162,8 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
 
 /home/user/m024000/cntlm-gss/src/globals.h:
 
+/home/user/m024000/cntlm-gss/src/logger.h:
+
 /home/user/m024000/cntlm-gss/src/config.h:
 
 /usr/include/bits/confname.h:
@@ -1194,11 +1172,9 @@ src/CMakeFiles/cntlm.dir/xcrypt.c.o: /home/user/m024000/cntlm-gss/src/xcrypt.c \
 
 /home/user/m024000/cntlm-gss/src/direct.c:
 
-/usr/include/stdc-predef.h:
-
-/home/user/m024000/cntlm-gss/src/http.c:
-
 /usr/include/bits/environments.h:
+
+/home/user/m024000/cntlm-gss/src/logger.c:
 
 /usr/include/getopt.h:
 

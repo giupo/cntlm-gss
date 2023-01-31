@@ -26,6 +26,8 @@
 #include "utils.h"
 #include "auth.h"
 
+#include "logger.h"
+
 struct auth_s *new_auth(void) {
 	struct auth_s *tmp;
 
@@ -90,34 +92,34 @@ struct auth_s *dup_auth(struct auth_s *creds, int fullcopy) {
 void dump_auth(struct auth_s *creds) {
 	char *tmp;
 
-	printf("Credentials structure dump:\n");
+	cntlm_log(LOG_INFO, "Credentials structure dump:\n");
 	if (creds == NULL) {
-		printf("Struct is not allocated!\n");
+		cntlm_log(LOG_INFO, "Struct is not allocated!\n");
 		return;
 	}
 
-	printf("User:       %s\n", creds->user);
-	printf("Domain:     %s\n", creds->domain);
-	printf("Wks:        %s\n", creds->workstation);
-	printf("HashNTLMv2: %d\n", creds->hashntlm2);
-	printf("HashNT:     %d\n", creds->hashnt);
-	printf("HashLM:     %d\n", creds->hashlm);
-	printf("Flags:      %X\n", creds->flags);
+	cntlm_log(LOG_INFO, "User:       %s\n", creds->user);
+	cntlm_log(LOG_INFO, "Domain:     %s\n", creds->domain);
+	cntlm_log(LOG_INFO, "Wks:        %s\n", creds->workstation);
+	cntlm_log(LOG_INFO, "HashNTLMv2: %d\n", creds->hashntlm2);
+	cntlm_log(LOG_INFO, "HashNT:     %d\n", creds->hashnt);
+	cntlm_log(LOG_INFO, "HashLM:     %d\n", creds->hashlm);
+	cntlm_log(LOG_INFO, "Flags:      %X\n", creds->flags);
 	if (creds->passntlm2) {
 		tmp = printmem(creds->passntlm2, 16, 8);
-		printf("PassNTLMv2: %s\n", tmp);
+		cntlm_log(LOG_INFO, "PassNTLMv2: %s\n", tmp);
 		free(tmp);
 	}
 
 	if (creds->passnt) {
 		tmp = printmem(creds->passnt, 16, 8);
-		printf("PassNT:     %s\n", tmp);
+		cntlm_log(LOG_INFO, "PassNT:     %s\n", tmp);
 		free(tmp);
 	}
 
 	if (creds->passlm) {
 		tmp = printmem(creds->passlm, 16, 8);
-		printf("PassLM:     %s\n\n", tmp);
+		cntlm_log(LOG_INFO, "PassLM:     %s\n\n", tmp);
 		free(tmp);
 	}
 }

@@ -85,6 +85,51 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
 	cd /home/user/m024000/cntlm-gss/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/user/m024000/cntlm-gss/build/CMakeFiles /home/user/m024000/cntlm-gss/build/src//CMakeFiles/progress.marks
@@ -274,29 +319,29 @@ http.c.s:
 	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/http.c.s
 .PHONY : http.c.s
 
-kerberos.o: kerberos.c.o
-.PHONY : kerberos.o
+logger.o: logger.c.o
+.PHONY : logger.o
 
 # target to build an object file
-kerberos.c.o:
-	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/kerberos.c.o
-.PHONY : kerberos.c.o
+logger.c.o:
+	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/logger.c.o
+.PHONY : logger.c.o
 
-kerberos.i: kerberos.c.i
-.PHONY : kerberos.i
+logger.i: logger.c.i
+.PHONY : logger.i
 
 # target to preprocess a source file
-kerberos.c.i:
-	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/kerberos.c.i
-.PHONY : kerberos.c.i
+logger.c.i:
+	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/logger.c.i
+.PHONY : logger.c.i
 
-kerberos.s: kerberos.c.s
-.PHONY : kerberos.s
+logger.s: logger.c.s
+.PHONY : logger.s
 
 # target to generate assembly for a file
-kerberos.c.s:
-	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/kerberos.c.s
-.PHONY : kerberos.c.s
+logger.c.s:
+	cd /home/user/m024000/cntlm-gss/build && $(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/logger.c.s
+.PHONY : logger.c.s
 
 main.o: main.c.o
 .PHONY : main.o
@@ -473,6 +518,10 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... cntlm"
 	@echo "... acl.o"
@@ -493,9 +542,9 @@ help:
 	@echo "... http.o"
 	@echo "... http.i"
 	@echo "... http.s"
-	@echo "... kerberos.o"
-	@echo "... kerberos.i"
-	@echo "... kerberos.s"
+	@echo "... logger.o"
+	@echo "... logger.i"
+	@echo "... logger.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

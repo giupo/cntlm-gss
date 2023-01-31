@@ -68,17 +68,17 @@
 
 void display_ctx_flags(OM_uint32 flags) {
 	if (flags & GSS_C_DELEG_FLAG)
-		syslog(LOG_INFO, "context flag: GSS_C_DELEG_FLAG\n");
+		cntlm_log(LOG_INFO, "context flag: GSS_C_DELEG_FLAG\n");
 	if (flags & GSS_C_MUTUAL_FLAG)
-		syslog(LOG_INFO, "context flag: GSS_C_MUTUAL_FLAG\n");
+		cntlm_log(LOG_INFO, "context flag: GSS_C_MUTUAL_FLAG\n");
 	if (flags & GSS_C_REPLAY_FLAG)
-		syslog(LOG_INFO, "context flag: GSS_C_REPLAY_FLAG\n");
+		cntlm_log(LOG_INFO, "context flag: GSS_C_REPLAY_FLAG\n");
 	if (flags & GSS_C_SEQUENCE_FLAG)
-		syslog(LOG_INFO, "context flag: GSS_C_SEQUENCE_FLAG\n");
+		cntlm_log(LOG_INFO, "context flag: GSS_C_SEQUENCE_FLAG\n");
 	if (flags & GSS_C_CONF_FLAG)
-		syslog(LOG_INFO, "context flag: GSS_C_CONF_FLAG\n");
+		cntlm_log(LOG_INFO, "context flag: GSS_C_CONF_FLAG\n");
 	if (flags & GSS_C_INTEG_FLAG)
-		syslog(LOG_INFO, "context flag: GSS_C_INTEG_FLAG\n");
+		cntlm_log(LOG_INFO, "context flag: GSS_C_INTEG_FLAG\n");
 }
 
 static void display_status_1(char *m, OM_uint32 code, int type) {
@@ -91,7 +91,7 @@ static void display_status_1(char *m, OM_uint32 code, int type) {
 		maj_stat = gss_display_status(&min_stat, code, type, GSS_C_NULL_OID,
 				&msg_ctx, &msg);
 		if (1)
-			syslog(LOG_ERR, "GSS-API error %s: %s\n", m, (char *) msg.value);
+			cntlm_log(LOG_ERR, "GSS-API error %s: %s\n", m, (char *) msg.value);
 		(void) gss_release_buffer(&min_stat, &msg);
 
 		if (!msg_ctx)
@@ -134,7 +134,7 @@ void display_name(char* txt, gss_name_t *name) {
 		display_status("Display name", maj_stat, min_stat);
 	}
 
-	syslog(LOG_INFO, txt, (char *) out_name.value);
+	cntlm_log(LOG_INFO, txt, (char *) out_name.value);
 
 	(void) gss_release_buffer(&min_stat, &out_name);
 
@@ -224,7 +224,7 @@ int client_establish_context(char *service_name,
 	}
 
 	if (debug)
-		syslog(LOG_INFO, "Got token (size=%d)\n", (int) send_tok->length);
+		cntlm_log(LOG_INFO, "Got token (size=%d)\n", (int) send_tok->length);
 
 	maj_stat = gss_delete_sec_context(&min_stat, &gss_context, GSS_C_NO_BUFFER);
 	if (maj_stat != GSS_S_COMPLETE) {
@@ -245,7 +245,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 
 	if (credentials->haskrb == KRB_KO) {
 		if (debug)
-			syslog(LOG_INFO, "Skipping already failed gss auth for %s\n",
+			cntlm_log(LOG_INFO, "Skipping already failed gss auth for %s\n",
 					proxy->hostname);
 		return 0;
 	}
@@ -257,7 +257,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 			if (!(credentials->haskrb & KRB_CREDENTIAL_AVAILABLE)){
 				//no credential -> no token
 				if (debug)
-					syslog(LOG_INFO, "No valid credential available\n");
+					cntlm_log(LOG_INFO, "No valid credential available\n");
 				return 0;
 			}
 //		}
@@ -277,7 +277,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 				BUFSIZE);
 
 		if (debug) {
-			syslog(LOG_INFO, "Token B64 (size=%d)... %s\n",
+			cntlm_log(LOG_INFO, "Token B64 (size=%d)... %s\n",
 					(int) strlen(token), token);
 			display_ctx_flags(ret_flags);
 		}
@@ -290,7 +290,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 		credentials->haskrb = KRB_KO;
 
 		if (debug)
-			syslog(LOG_INFO, "No valid token acquired for %s\n", service_name);
+			cntlm_log(LOG_INFO, "No valid token acquired for %s\n", service_name);
 
 		rc=0;
 	}

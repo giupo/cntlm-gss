@@ -29,6 +29,7 @@
 #include "xcrypt.h"
 #include "utils.h"
 #include "auth.h"
+#include "logger.h"
 
 extern int debug;
 
@@ -77,9 +78,9 @@ static void ntlm2_calc_resp(char **nthash, int *ntlen, char **lmhash, int *lmlen
 	if (debug) {
 		tmp = printmem(nonce, 8, 7);
 #ifdef PRId64
-		printf("NTLMv2:\n\t    Nonce: %s\n\tTimestamp: %"PRId64"\n", tmp, tw);
+		cntlm_log(LOG_INFO, "NTLMv2:\n\t    Nonce: %s\n\tTimestamp: %"PRId64"\n", tmp, tw);
 #else
-		printf("NTLMv2:\n\t    Nonce: %s\n\tTimestamp: %ld\n", tmp, tw);
+		cntlm_log(LOG_INFO, "NTLMv2:\n\t    Nonce: %s\n\tTimestamp: %ld\n", tmp, tw);
 #endif
 		free(tmp);
 	}
@@ -96,7 +97,7 @@ static void ntlm2_calc_resp(char **nthash, int *ntlen, char **lmhash, int *lmlen
 
 	if (0 && debug) {
 		tmp = printmem(blob, blen, 7);
-		printf("\t     Blob: %s (%d)\n", tmp, blen);
+		cntlm_log(LOG_INFO, "\t     Blob: %s (%d)\n", tmp, blen);
 		free(tmp);
 	}
 
@@ -230,7 +231,7 @@ int ntlm_request(char **dst, struct auth_s *creds) {
 			flags = 0xb206;
 		else {
 			if (debug) {
-				printf("You're requesting with empty auth_s?!\n");
+				cntlm_log(LOG_INFO, "You're requesting with empty auth_s?!\n");
 				dump_auth(creds);
 			}
 			return 0;
@@ -239,10 +240,10 @@ int ntlm_request(char **dst, struct auth_s *creds) {
 		flags = creds->flags;
 
 	if (debug) {
-		printf("NTLM Request:\n");
-		printf("\t   Domain: %s\n", creds->domain);
-		printf("\t Hostname: %s\n", creds->workstation);
-		printf("\t    Flags: 0x%X\n", (int)flags);
+		cntlm_log(LOG_INFO, "NTLM Request:\n");
+		cntlm_log(LOG_INFO, "\t   Domain: %s\n", creds->domain);
+		cntlm_log(LOG_INFO, "\t Hostname: %s\n", creds->workstation);
+		cntlm_log(LOG_INFO, "\t    Flags: 0x%X\n", (int)flags);
 	}
 
 	buf = new(NTLM_BUFSIZE);
@@ -288,9 +289,9 @@ void dump(char *src, int len) {
 	tmp = new(len*3+4);
 	for (i = 0; i < len; ++i) {
 		snprintf(tmp+i*3, 4, "%0hhX   ", src[i]);
-		printf("%c ", src[i]);
+		cntlm_log(LOG_INFO, "%c ", src[i]);
 	}
-	printf("\n%s\n", tmp);
+	cntlm_log(LOG_INFO, "\n%s\n", tmp);
 	free(tmp);
 }
 */
@@ -303,11 +304,11 @@ int ntlm_response(char **dst, char *challenge, int challen, struct auth_s *creds
 	int lmlen = 0, ntlen = 0;
 
 	if (debug) {
-		printf("NTLM Challenge:\n");
+		cntlm_log(LOG_INFO, "NTLM Challenge:\n");
 		tmp = printmem(MEM(challenge, char, 24), 8, 7);
-		printf("\tChallenge: %s (len: %d)\n", tmp, challen);
+		cntlm_log(LOG_INFO, "\tChallenge: %s (len: %d)\n", tmp, challen);
 		free(tmp);
-		printf("\t    Flags: 0x%X\n", U32LE(VAL(challenge, uint32_t, 20)));
+		cntlm_log(LOG_INFO, "\t    Flags: 0x%X\n", U32LE(VAL(challenge, uint32_t, 20)));
 	}
 
 	if (challen > 48) {
@@ -320,26 +321,26 @@ int ntlm_response(char **dst, char *challenge, int challen, struct auth_s *creds
 			if (debug) {
 				switch (ttype) {
 					case 0x1:
-						printf("\t   Server: ");
+						cntlm_log(LOG_INFO, "\t   Server: ");
 						break;
 					case 0x2:
-						printf("\tNT domain: ");
+						cntlm_log(LOG_INFO, "\tNT domain: ");
 						break;
 					case 0x3:
-						printf("\t     FQDN: ");
+						cntlm_log(LOG_INFO, "\t     FQDN: ");
 						break;
 					case 0x4:
-						printf("\t   Domain: ");
+						cntlm_log(LOG_INFO, "\t   Domain: ");
 						break;
 					case 0x5:
-						printf("\t      TLD: ");
+						cntlm_log(LOG_INFO, "\t      TLD: ");
 						break;
 					default:
-						printf("\t      %3d: ", ttype);
+						cntlm_log(LOG_INFO, "\t      %3d: ", ttype);
 						break;
 				}
 				tmp = printuc(MEM(challenge, char, tpos+4), tlen);
-				printf("%s\n", tmp);
+				cntlm_log(LOG_INFO, "%s\n", tmp);
 				free(tmp);
 			}
 
@@ -351,7 +352,7 @@ int ntlm_response(char **dst, char *challenge, int challen, struct auth_s *creds
 			tblen += 4;
 
 		if (debug) {
-			printf("\t    TBofs: %d\n\t    TBlen: %d\n\t    ttype: %d\n", tbofs, tblen, ttype);
+			cntlm_log(LOG_INFO, "\t    TBofs: %d\n\t    TBlen: %d\n\t    ttype: %d\n", tbofs, tblen, ttype);
 		}
 	}
 
@@ -394,18 +395,18 @@ int ntlm_response(char **dst, char *challenge, int challen, struct auth_s *creds
 	}
 
 	if (debug) {
-		printf("NTLM Response:\n");
-		printf("\t Hostname: '%s'\n", creds->workstation);
-		printf("\t   Domain: '%s'\n", creds->domain);
-		printf("\t Username: '%s'\n", creds->user);
+		cntlm_log(LOG_INFO, "NTLM Response:\n");
+		cntlm_log(LOG_INFO, "\t Hostname: '%s'\n", creds->workstation);
+		cntlm_log(LOG_INFO, "\t   Domain: '%s'\n", creds->domain);
+		cntlm_log(LOG_INFO, "\t Username: '%s'\n", creds->user);
 		if (ntlen) {
 			tmp = printmem(nthash, ntlen, 7);
-			printf("\t Response: '%s' (%d)\n", tmp, ntlen);
+			cntlm_log(LOG_INFO, "\t Response: '%s' (%d)\n", tmp, ntlen);
 			free(tmp);
 		}
 		if (lmlen) {
 			tmp = printmem(lmhash, lmlen, 7);
-			printf("\t Response: '%s' (%d)\n", tmp, lmlen);
+			cntlm_log(LOG_INFO, "\t Response: '%s' (%d)\n", tmp, lmlen);
 			free(tmp);
 		}
 	}

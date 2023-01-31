@@ -28,15 +28,15 @@
 #include <stdio.h>
 #include <errno.h>
 #include <ctype.h>
-#include <syslog.h>
 
-// TODO(giupo) Serve?
-//#include "config/config.h"
 #include "configured_constants.h"
 
 #include "swap.h"
 #include "utils.h"
 #include "socket.h"
+
+#include "logger.h"
+
 
 char hextab[17] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 0};
 int hexindex[128] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
@@ -55,9 +55,9 @@ void myexit(int rc) {
 
 void croak(const char *msg, int console) {
 	if (console)
-		printf("%s", msg);
+		cntlm_log(LOG_INFO, "%s", msg);
 	else
-		syslog(LOG_ERR, "%s", msg);
+		cntlm_log(LOG_ERR, "%s", msg);
 	
 	myexit(1);
 }
@@ -143,7 +143,7 @@ void plist_dump(plist_t list) {
 
 	t = list;
 	while (t) {
-		printf("List data: %lu => 0x%8p\n", (unsigned long int)t->key, t->aux);
+		cntlm_log(LOG_INFO, "List data: %lu => 0x%8p\n", (unsigned long int)t->key, t->aux);
 		t = t->next;
 	}
 }
@@ -472,7 +472,7 @@ void hlist_dump(hlist_t list) {
 
 	t = list;
 	while (t) {
-		printf("%-30s => %s\n", t->key, t->value);
+		cntlm_log(LOG_INFO, "%-30s => %s\n", t->key, t->value);
 		t = t->next;
 	}
 }

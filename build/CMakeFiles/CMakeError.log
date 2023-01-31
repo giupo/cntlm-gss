@@ -1,23 +1,23 @@
 Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
-Change Dir: /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-oB1Mx2
+Change Dir: /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-pBlGAV
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_3f007/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_3f007.dir/build.make CMakeFiles/cmTC_3f007.dir/build
-gmake[1]: Entering directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-oB1Mx2'
-Building C object CMakeFiles/cmTC_3f007.dir/src.c.o
-/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_3f007.dir/src.c.o -c /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-oB1Mx2/src.c
-Linking C executable cmTC_3f007
-/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3f007.dir/link.txt --verbose=1
-/usr/bin/cc CMakeFiles/cmTC_3f007.dir/src.c.o -o cmTC_3f007 
-CMakeFiles/cmTC_3f007.dir/src.c.o: In function `main':
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_093a5/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_093a5.dir/build.make CMakeFiles/cmTC_093a5.dir/build
+gmake[1]: Entering directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-pBlGAV'
+Building C object CMakeFiles/cmTC_093a5.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_093a5.dir/src.c.o -c /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-pBlGAV/src.c
+Linking C executable cmTC_093a5
+/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_093a5.dir/link.txt --verbose=1
+/usr/bin/cc CMakeFiles/cmTC_093a5.dir/src.c.o -o cmTC_093a5 
+CMakeFiles/cmTC_093a5.dir/src.c.o: In function `main':
 src.c:(.text+0x2d): undefined reference to `pthread_create'
 src.c:(.text+0x39): undefined reference to `pthread_detach'
 src.c:(.text+0x45): undefined reference to `pthread_cancel'
 src.c:(.text+0x56): undefined reference to `pthread_join'
 src.c:(.text+0x6a): undefined reference to `pthread_atfork'
 collect2: error: ld returned 1 exit status
-gmake[1]: *** [cmTC_3f007] Error 1
-gmake[1]: Leaving directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-oB1Mx2'
-gmake: *** [cmTC_3f007/fast] Error 2
+gmake[1]: *** [cmTC_093a5] Error 1
+gmake[1]: Leaving directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-pBlGAV'
+gmake: *** [cmTC_093a5/fast] Error 2
 
 
 Source file was:
@@ -43,20 +43,20 @@ int main(void)
 
 
 Determining if the function pthread_create exists in the pthreads failed with the following output:
-Change Dir: /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-sSMqPw
+Change Dir: /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-RC5pTN
 
-Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1d7f8/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1d7f8.dir/build.make CMakeFiles/cmTC_1d7f8.dir/build
-gmake[1]: Entering directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-sSMqPw'
-Building C object CMakeFiles/cmTC_1d7f8.dir/CheckFunctionExists.c.o
-/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_1d7f8.dir/CheckFunctionExists.c.o -c /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-sSMqPw/CheckFunctionExists.c
-Linking C executable cmTC_1d7f8
-/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1d7f8.dir/link.txt --verbose=1
-/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_1d7f8.dir/CheckFunctionExists.c.o -o cmTC_1d7f8  -lpthreads 
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_4f470/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_4f470.dir/build.make CMakeFiles/cmTC_4f470.dir/build
+gmake[1]: Entering directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-RC5pTN'
+Building C object CMakeFiles/cmTC_4f470.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_4f470.dir/CheckFunctionExists.c.o -c /home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-RC5pTN/CheckFunctionExists.c
+Linking C executable cmTC_4f470
+/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmake -E cmake_link_script CMakeFiles/cmTC_4f470.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create CMakeFiles/cmTC_4f470.dir/CheckFunctionExists.c.o -o cmTC_4f470  -lpthreads 
 /usr/bin/ld: cannot find -lpthreads
 collect2: error: ld returned 1 exit status
-gmake[1]: *** [cmTC_1d7f8] Error 1
-gmake[1]: Leaving directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-sSMqPw'
-gmake: *** [cmTC_1d7f8/fast] Error 2
+gmake[1]: *** [cmTC_4f470] Error 1
+gmake[1]: Leaving directory `/home/user/m024000/cntlm-gss/build/CMakeFiles/CMakeScratch/TryCompile-RC5pTN'
+gmake: *** [cmTC_4f470/fast] Error 2
 
 
 

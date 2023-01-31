@@ -14,7 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/home/user/m024000/cntlm-gss/src/direct.c" "src/CMakeFiles/cntlm.dir/direct.c.o" "gcc" "src/CMakeFiles/cntlm.dir/direct.c.o.d"
   "/home/user/m024000/cntlm-gss/src/forward.c" "src/CMakeFiles/cntlm.dir/forward.c.o" "gcc" "src/CMakeFiles/cntlm.dir/forward.c.o.d"
   "/home/user/m024000/cntlm-gss/src/http.c" "src/CMakeFiles/cntlm.dir/http.c.o" "gcc" "src/CMakeFiles/cntlm.dir/http.c.o.d"
-  "/home/user/m024000/cntlm-gss/src/kerberos.c" "src/CMakeFiles/cntlm.dir/kerberos.c.o" "gcc" "src/CMakeFiles/cntlm.dir/kerberos.c.o.d"
+  "/home/user/m024000/cntlm-gss/src/logger.c" "src/CMakeFiles/cntlm.dir/logger.c.o" "gcc" "src/CMakeFiles/cntlm.dir/logger.c.o.d"
   "/home/user/m024000/cntlm-gss/src/main.c" "src/CMakeFiles/cntlm.dir/main.c.o" "gcc" "src/CMakeFiles/cntlm.dir/main.c.o.d"
   "/home/user/m024000/cntlm-gss/src/ntlm.c" "src/CMakeFiles/cntlm.dir/ntlm.c.o" "gcc" "src/CMakeFiles/cntlm.dir/ntlm.c.o.d"
   "/home/user/m024000/cntlm-gss/src/pages.c" "src/CMakeFiles/cntlm.dir/pages.c.o" "gcc" "src/CMakeFiles/cntlm.dir/pages.c.o.d"
@@ -26,6 +26,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/user/m024000/cntlm-gss/build/zf_log/zf_log/CMakeFiles/zf_log.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

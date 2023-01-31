@@ -23,12 +23,7 @@
 #define _SWAP_H
 
 #include <stdint.h>
-
-
-// TODO(giupo) vediamo se serve
-// #include "config/config.h"
 #include "configured_constants.h"
-
 
 #define swap16(x) \
 	((uint16_t)( \

@@ -27,6 +27,32 @@ CMAKE_BUILD_TYPE:STRING=
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
 
+//CXX compiler
+CMAKE_CXX_COMPILER:FILEPATH=/usr/bin/c++
+
+//A wrapper around 'ar' adding the appropriate '--plugin' option
+// for the GCC compiler
+CMAKE_CXX_COMPILER_AR:FILEPATH=/usr/bin/gcc-ar
+
+//A wrapper around 'ranlib' adding the appropriate '--plugin' option
+// for the GCC compiler
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=/usr/bin/gcc-ranlib
+
+//Flags used by the CXX compiler during all build types.
+CMAKE_CXX_FLAGS:STRING=
+
+//Flags used by the CXX compiler during DEBUG builds.
+CMAKE_CXX_FLAGS_DEBUG:STRING=-g
+
+//Flags used by the CXX compiler during MINSIZEREL builds.
+CMAKE_CXX_FLAGS_MINSIZEREL:STRING=-Os -DNDEBUG
+
+//Flags used by the CXX compiler during RELEASE builds.
+CMAKE_CXX_FLAGS_RELEASE:STRING=-O3 -DNDEBUG
+
+//Flags used by the CXX compiler during RELWITHDEBINFO builds.
+CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -g -DNDEBUG
+
 //C compiler
 CMAKE_C_COMPILER:FILEPATH=/usr/bin/cc
 
@@ -201,6 +227,48 @@ CMAKE_STRIP:FILEPATH=/usr/bin/strip
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Installation directory for CMake files
+INSTALL_CMAKE_DIR:PATH=lib/cmake/zf_log
+
+//Installation directory for header files
+INSTALL_INCLUDE_DIR:PATH=include
+
+//Installation directory for libraries
+INSTALL_LIB_DIR:PATH=lib
+
+//Compile with Kerberos Support
+WITH_KERBEROS:BOOL=OFF
+
+//Generate install target
+ZF_LOG_CONFIGURE_INSTALL:BOOL=ON
+
+//Build examples
+ZF_LOG_EXAMPLES:BOOL=OFF
+
+//Prefix for all linker symbols exported by the library
+ZF_LOG_LIBRARY_PREFIX:STRING=
+
+//Optimize for size (prefer size over speed)
+ZF_LOG_OPTIMIZE_SIZE:BOOL=OFF
+
+//Build performance tests (requires Python)
+ZF_LOG_PERF_TESTS:BOOL=OFF
+
+//Build tests
+ZF_LOG_TESTS:BOOL=OFF
+
+//Use Android log by defaul when available
+ZF_LOG_USE_ANDROID_LOG:BOOL=OFF
+
+//Include zf_log_config.h header file in zf_log compilation untis
+ZF_LOG_USE_CONFIG_HEADER:BOOL=OFF
+
+//Use OutputDebugString (Windows) by default when available
+ZF_LOG_USE_DEBUGSTRING:BOOL=OFF
+
+//Use NSLog (Apple System Log) by default when available
+ZF_LOG_USE_NSLOG:BOOL=OFF
+
 //Value Computed by CMake
 cntlm_BINARY_DIR:STATIC=/home/user/m024000/cntlm-gss/build
 
@@ -210,8 +278,14 @@ cntlm_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 cntlm_SOURCE_DIR:STATIC=/home/user/m024000/cntlm-gss
 
-//The directory containing a CMake configuration file for gssapi_krb5.
-gssapi_krb5_DIR:PATH=gssapi_krb5_DIR-NOTFOUND
+//Value Computed by CMake
+zf_log_BINARY_DIR:STATIC=/home/user/m024000/cntlm-gss/build/zf_log
+
+//Value Computed by CMake
+zf_log_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+zf_log_SOURCE_DIR:STATIC=/home/user/m024000/cntlm-gss/zf_log
 
 
 ########################
@@ -238,6 +312,22 @@ CMAKE_COMMAND:INTERNAL=/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cmak
 CMAKE_CPACK_COMMAND:INTERNAL=/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/cpack
 //Path to ctest program executable.
 CMAKE_CTEST_COMMAND:INTERNAL=/home/group/public/894cf/cellar/cmake/3.25.0-rc3/bin/ctest
+//ADVANCED property for variable: CMAKE_CXX_COMPILER
+CMAKE_CXX_COMPILER-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_COMPILER_AR
+CMAKE_CXX_COMPILER_AR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_COMPILER_RANLIB
+CMAKE_CXX_COMPILER_RANLIB-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_FLAGS
+CMAKE_CXX_FLAGS-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_FLAGS_DEBUG
+CMAKE_CXX_FLAGS_DEBUG-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_FLAGS_MINSIZEREL
+CMAKE_CXX_FLAGS_MINSIZEREL-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_FLAGS_RELEASE
+CMAKE_CXX_FLAGS_RELEASE-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: CMAKE_CXX_FLAGS_RELWITHDEBINFO
+CMAKE_CXX_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_COMPILER
 CMAKE_C_COMPILER-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_C_COMPILER_AR
@@ -310,7 +400,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=2
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=4
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP

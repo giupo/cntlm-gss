@@ -4,7 +4,7 @@
 # compile C with /usr/bin/cc
 C_DEFINES = 
 
-C_INCLUDES = -I"/home/user/m024000/cntlm-gss/src/\$$CMAKE_SOURCE_DIR/src"
+C_INCLUDES = -I"/home/user/m024000/cntlm-gss/src/\$$CMAKE_SOURCE_DIR/src" -I/home/user/m024000/cntlm-gss/zf_log/zf_log
 
 C_FLAGS = -std=gnu99
 

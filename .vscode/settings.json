@@ -1,6 +1,9 @@
 {
   "files.associations": {
     "*.rmd": "markdown",
-    "utils.h": "c"
+    "utils.h": "c",
+    "syslog.h": "c",
+    "netdb.h": "c",
+    "configured_constants.h": "c"
   }
 }

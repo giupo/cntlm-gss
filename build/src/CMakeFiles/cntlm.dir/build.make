@@ -153,19 +153,19 @@ src/CMakeFiles/cntlm.dir/http.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/cntlm.dir/http.c.s"
 	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/user/m024000/cntlm-gss/src/http.c -o CMakeFiles/cntlm.dir/http.c.s
 
-src/CMakeFiles/cntlm.dir/kerberos.c.o: src/CMakeFiles/cntlm.dir/flags.make
-src/CMakeFiles/cntlm.dir/kerberos.c.o: /home/user/m024000/cntlm-gss/src/kerberos.c
-src/CMakeFiles/cntlm.dir/kerberos.c.o: src/CMakeFiles/cntlm.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/user/m024000/cntlm-gss/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object src/CMakeFiles/cntlm.dir/kerberos.c.o"
-	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/cntlm.dir/kerberos.c.o -MF CMakeFiles/cntlm.dir/kerberos.c.o.d -o CMakeFiles/cntlm.dir/kerberos.c.o -c /home/user/m024000/cntlm-gss/src/kerberos.c
+src/CMakeFiles/cntlm.dir/logger.c.o: src/CMakeFiles/cntlm.dir/flags.make
+src/CMakeFiles/cntlm.dir/logger.c.o: /home/user/m024000/cntlm-gss/src/logger.c
+src/CMakeFiles/cntlm.dir/logger.c.o: src/CMakeFiles/cntlm.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/user/m024000/cntlm-gss/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building C object src/CMakeFiles/cntlm.dir/logger.c.o"
+	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT src/CMakeFiles/cntlm.dir/logger.c.o -MF CMakeFiles/cntlm.dir/logger.c.o.d -o CMakeFiles/cntlm.dir/logger.c.o -c /home/user/m024000/cntlm-gss/src/logger.c
 
-src/CMakeFiles/cntlm.dir/kerberos.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/cntlm.dir/kerberos.c.i"
-	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/user/m024000/cntlm-gss/src/kerberos.c > CMakeFiles/cntlm.dir/kerberos.c.i
+src/CMakeFiles/cntlm.dir/logger.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/cntlm.dir/logger.c.i"
+	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/user/m024000/cntlm-gss/src/logger.c > CMakeFiles/cntlm.dir/logger.c.i
 
-src/CMakeFiles/cntlm.dir/kerberos.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/cntlm.dir/kerberos.c.s"
-	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/user/m024000/cntlm-gss/src/kerberos.c -o CMakeFiles/cntlm.dir/kerberos.c.s
+src/CMakeFiles/cntlm.dir/logger.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/cntlm.dir/logger.c.s"
+	cd /home/user/m024000/cntlm-gss/build/src && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/user/m024000/cntlm-gss/src/logger.c -o CMakeFiles/cntlm.dir/logger.c.s
 
 src/CMakeFiles/cntlm.dir/main.c.o: src/CMakeFiles/cntlm.dir/flags.make
 src/CMakeFiles/cntlm.dir/main.c.o: /home/user/m024000/cntlm-gss/src/main.c
@@ -273,7 +273,7 @@ cntlm_OBJECTS = \
 "CMakeFiles/cntlm.dir/direct.c.o" \
 "CMakeFiles/cntlm.dir/forward.c.o" \
 "CMakeFiles/cntlm.dir/http.c.o" \
-"CMakeFiles/cntlm.dir/kerberos.c.o" \
+"CMakeFiles/cntlm.dir/logger.c.o" \
 "CMakeFiles/cntlm.dir/main.c.o" \
 "CMakeFiles/cntlm.dir/ntlm.c.o" \
 "CMakeFiles/cntlm.dir/pages.c.o" \
@@ -291,7 +291,7 @@ src/cntlm: src/CMakeFiles/cntlm.dir/config.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/direct.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/forward.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/http.c.o
-src/cntlm: src/CMakeFiles/cntlm.dir/kerberos.c.o
+src/cntlm: src/CMakeFiles/cntlm.dir/logger.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/main.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/ntlm.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/pages.c.o
@@ -300,6 +300,7 @@ src/cntlm: src/CMakeFiles/cntlm.dir/socket.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/utils.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/xcrypt.c.o
 src/cntlm: src/CMakeFiles/cntlm.dir/build.make
+src/cntlm: zf_log/zf_log/libzf_log.a
 src/cntlm: src/CMakeFiles/cntlm.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/user/m024000/cntlm-gss/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Linking C executable cntlm"
 	cd /home/user/m024000/cntlm-gss/build/src && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/cntlm.dir/link.txt --verbose=$(VERBOSE)

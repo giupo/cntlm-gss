@@ -28,6 +28,7 @@
 #include "config.h"
 #include "utils.h"
 
+#include "logger.h"
 /*
 static const char *globals[] = {
 	"Allow",
@@ -47,7 +48,7 @@ config_t config_open(const char *fname) {
 	char section[MINIBUF_SIZE] = "global";
 	int i, j, slen, len, quote;
 
-	//printf("sizeof = %d\n", sizeof(globals) / sizeof(char *));
+	//cntlm_log(LOG_INFO, "sizeof = %d\n", sizeof(globals) / sizeof(char *));
 
 	fp = fopen(fname, "r");
 	if (!fp)
@@ -136,7 +137,7 @@ config_t config_open(const char *fname) {
 		}
 
 		if (debug)
-			printf("section: %s, %s = '%s'\n", section, key, value);
+			cntlm_log(LOG_INFO, "section: %s, %s = '%s'\n", section, key, value);
 		rc->options = hlist_add(rc->options, key, value, HLIST_NOALLOC, HLIST_NOALLOC);
 	}
 

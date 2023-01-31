@@ -34,6 +34,8 @@
 #include "forward.h"
 #include "scanner.h"
 
+#include "logger.h"
+
 /*
  * This code is a piece of shit, but it works. Cannot rewrite it now, because
  * I don't have ISA AV filter anymore - wouldn't be able to test it.
@@ -65,10 +67,10 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 		while (list) {
 			pat = lowercase(strdup(list->aux));
 			if (debug)
-				printf("scanner_hook: matching U-A header (%s) to %s\n", tmp, pat);
+				cntlm_log(LOG_INFO, "scanner_hook: matching U-A header (%s) to %s\n", tmp, pat);
 			if (!fnmatch(pat, tmp, 0)) {
 				if (debug)
-					printf("scanner_hook: positive match!\n");
+					cntlm_log(LOG_INFO, "scanner_hook: positive match!\n");
 				maxKBs = 0;
 				free(pat);
 				break;
@@ -86,7 +88,7 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 	do {
 		size = read(*sd, buf + len, SAMPLE - len - 1);
 		if (debug)
-			printf("scanner_hook: read %d of %d\n", size, SAMPLE - len);
+			cntlm_log(LOG_INFO, "scanner_hook: read %d of %d\n", size, SAMPLE - len);
 		if (size > 0)
 			len += size;
 	} while (size > 0 && len < SAMPLE - 1);
@@ -99,7 +101,7 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 		if (pos[i] == '"') {
 			isaid = substr(pos, 0, i);
 			if (debug)
-				printf("scanner_hook: ISA id = %s\n", isaid);
+				cntlm_log(LOG_INFO, "scanner_hook: ISA id = %s\n", isaid);
 
 			lsize = BUFSIZE;
 			line = new(lsize);
@@ -127,15 +129,15 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 						&& isdigit(pos[17])
 						&& (done = 1)) )) {
 					if (debug)
-						printf("scanner_hook: %s", line);
+						cntlm_log(LOG_INFO, "scanner_hook: %s", line);
 
 					if ((pos = strstr(line, "To be downloaded"))) {
 						filesize = atol(pos+16);
 						if (debug) {
 							if (filesize > 0) {
-								printf("scanner_hook: file size detected: %ld KiBs (max: %ld)\n", filesize/1024, maxKBs);
+								cntlm_log(LOG_INFO, "scanner_hook: file size detected: %ld KiBs (max: %ld)\n", filesize/1024, maxKBs);
 							} else {
-								printf("scanner_hook: file size unknown -- quitting\n");
+								cntlm_log(LOG_INFO, "scanner_hook: file size unknown -- quitting\n");
 								break;
 							}
 						}
@@ -158,7 +160,7 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 
 					if (!headers_initiated) {
 						if (debug)
-							printf("scanner_hook: Giving up, \"To be downloaded\" line not found!\n");
+							cntlm_log(LOG_INFO, "scanner_hook: Giving up, \"To be downloaded\" line not found!\n");
 						break;
 					}
 
@@ -192,7 +194,7 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 				snprintf(post, BUFSIZE-1, "%surl=%s&%sSaveToDisk=YES&%sOrig=%s", isaid, pos, isaid, isaid, uurl);
 
 				if (debug)
-					printf("scanner_hook: Getting file with URL data = %s\n", request->url);
+					cntlm_log(LOG_INFO, "scanner_hook: Getting file with URL data = %s\n", request->url);
 
 				tmp = new(MINIBUF_SIZE);
 				snprintf(tmp, MINIBUF_SIZE, "%d", (int)strlen(post));
@@ -211,10 +213,10 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 				c = proxy_authenticate(&nc, newreq, newres, credentials);
 				if (c && newres->code == 407) {
 					if (debug)
-						printf("scanner_hook: Authentication OK, getting the file...\n");
+						cntlm_log(LOG_INFO, "scanner_hook: Authentication OK, getting the file...\n");
 				} else {
 					if (debug)
-						printf("scanner_hook: Authentication failed or refused!\n");
+						cntlm_log(LOG_INFO, "scanner_hook: Authentication failed or refused!\n");
 					close(nc);
 					nc = 0;
 				}
@@ -249,7 +251,7 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 					len = 0;
 					ok = PLUG_SENDHEAD | PLUG_SENDDATA;
 				} else if (debug)
-					printf("scanner_hook: New request failed\n");
+					cntlm_log(LOG_INFO, "scanner_hook: New request failed\n");
 
 				free(newreq);
 				free(newres);
@@ -260,18 +262,18 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 			free(line);
 			free(isaid);
 		} else if (debug)
-			printf("scanner_hook: ISA id not found\n");
+			cntlm_log(LOG_INFO, "scanner_hook: ISA id not found\n");
 	}
 
 	if (len) {
 		if (debug) {
-			printf("scanner_hook: flushing %d original bytes\n", len);
+			cntlm_log(LOG_INFO, "scanner_hook: flushing %d original bytes\n", len);
 			hlist_dump(response->headers);
 		}
 
 		if (!headers_send(cd, response)) {
 			if (debug)
-				printf("scanner_hook: failed to send headers\n");
+				cntlm_log(LOG_INFO, "scanner_hook: failed to send headers\n");
 			free(buf);
 			return PLUG_ERROR;
 		}
@@ -284,7 +286,7 @@ int scanner_hook(rr_data_t request, rr_data_t response, struct auth_s *credentia
 	}
 
 	if (debug)
-		printf("scanner_hook: ending with %d\n", ok);
+		cntlm_log(LOG_INFO, "scanner_hook: ending with %d\n", ok);
 
 	free(buf);
 	return ok;

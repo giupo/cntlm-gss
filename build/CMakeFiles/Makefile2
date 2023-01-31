@@ -63,14 +63,17 @@ CMAKE_BINARY_DIR = /home/user/m024000/cntlm-gss/build
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
+all: zf_log/all
 all: src/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
+preinstall: zf_log/preinstall
 preinstall: src/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
+clean: zf_log/clean
 clean: src/clean
 .PHONY : clean
 
@@ -90,10 +93,66 @@ src/clean: src/CMakeFiles/cntlm.dir/clean
 .PHONY : src/clean
 
 #=============================================================================
+# Directory level rules for directory zf_log
+
+# Recursive "all" directory target.
+zf_log/all: zf_log/zf_log/all
+.PHONY : zf_log/all
+
+# Recursive "preinstall" directory target.
+zf_log/preinstall: zf_log/zf_log/preinstall
+.PHONY : zf_log/preinstall
+
+# Recursive "clean" directory target.
+zf_log/clean: zf_log/zf_log/clean
+.PHONY : zf_log/clean
+
+#=============================================================================
+# Directory level rules for directory zf_log/zf_log
+
+# Recursive "all" directory target.
+zf_log/zf_log/all: zf_log/zf_log/CMakeFiles/zf_log.dir/all
+.PHONY : zf_log/zf_log/all
+
+# Recursive "preinstall" directory target.
+zf_log/zf_log/preinstall:
+.PHONY : zf_log/zf_log/preinstall
+
+# Recursive "clean" directory target.
+zf_log/zf_log/clean: zf_log/zf_log/CMakeFiles/zf_log.dir/clean
+.PHONY : zf_log/zf_log/clean
+
+#=============================================================================
+# Target rules for target zf_log/zf_log/CMakeFiles/zf_log.dir
+
+# All Build rule for target.
+zf_log/zf_log/CMakeFiles/zf_log.dir/all:
+	$(MAKE) $(MAKESILENT) -f zf_log/zf_log/CMakeFiles/zf_log.dir/build.make zf_log/zf_log/CMakeFiles/zf_log.dir/depend
+	$(MAKE) $(MAKESILENT) -f zf_log/zf_log/CMakeFiles/zf_log.dir/build.make zf_log/zf_log/CMakeFiles/zf_log.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/user/m024000/cntlm-gss/build/CMakeFiles --progress-num=16,17 "Built target zf_log"
+.PHONY : zf_log/zf_log/CMakeFiles/zf_log.dir/all
+
+# Build rule for subdir invocation for target.
+zf_log/zf_log/CMakeFiles/zf_log.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/user/m024000/cntlm-gss/build/CMakeFiles 2
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zf_log/zf_log/CMakeFiles/zf_log.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/user/m024000/cntlm-gss/build/CMakeFiles 0
+.PHONY : zf_log/zf_log/CMakeFiles/zf_log.dir/rule
+
+# Convenience name for target.
+zf_log: zf_log/zf_log/CMakeFiles/zf_log.dir/rule
+.PHONY : zf_log
+
+# clean rule for target.
+zf_log/zf_log/CMakeFiles/zf_log.dir/clean:
+	$(MAKE) $(MAKESILENT) -f zf_log/zf_log/CMakeFiles/zf_log.dir/build.make zf_log/zf_log/CMakeFiles/zf_log.dir/clean
+.PHONY : zf_log/zf_log/CMakeFiles/zf_log.dir/clean
+
+#=============================================================================
 # Target rules for target src/CMakeFiles/cntlm.dir
 
 # All Build rule for target.
-src/CMakeFiles/cntlm.dir/all:
+src/CMakeFiles/cntlm.dir/all: zf_log/zf_log/CMakeFiles/zf_log.dir/all
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/depend
 	$(MAKE) $(MAKESILENT) -f src/CMakeFiles/cntlm.dir/build.make src/CMakeFiles/cntlm.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/user/m024000/cntlm-gss/build/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 "Built target cntlm"
@@ -101,7 +160,7 @@ src/CMakeFiles/cntlm.dir/all:
 
 # Build rule for subdir invocation for target.
 src/CMakeFiles/cntlm.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/user/m024000/cntlm-gss/build/CMakeFiles 15
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/user/m024000/cntlm-gss/build/CMakeFiles 17
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 src/CMakeFiles/cntlm.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/user/m024000/cntlm-gss/build/CMakeFiles 0
 .PHONY : src/CMakeFiles/cntlm.dir/rule
