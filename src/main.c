@@ -46,12 +46,12 @@
  * Some helping routines like linked list manipulation substr(), memory
  * allocation, NTLM authentication routines, etc.
  */
-#include "config/config.h"
+
+#include "config.h"
 #include "socket.h"
 #include "utils.h"
 #include "ntlm.h"
 #include "swap.h"
-#include "config.h"
 #include "acl.h"
 #include "auth.h"
 #include "http.h"
@@ -710,9 +710,9 @@ int main(int argc, char **argv) {
 	openlog("cntlm", LOG_CONS, LOG_DAEMON);
 
 #if config_endian == 0
-	syslog(LOG_INFO, "Starting cntlm version " VERSION " for BIG endian\n");
+	syslog(LOG_INFO, "Starting cntlm version %s for BIG endian\n", CNTLM_VERSION);
 #else
-	syslog(LOG_INFO, "Starting cntlm version " VERSION " for LITTLE endian\n");
+	syslog(LOG_INFO, "Starting cntlm version %s for LITTLE endian\n", CNTLM_VERSION);
 #endif
 
 	while ((i = getopt(argc, argv, ":-:a:c:d:fghIl:p:r:su:vw:A:BD:F:G:HL:M:N:O:P:R:S:T:U:")) != -1) {
@@ -835,7 +835,7 @@ int main(int argc, char **argv) {
 					printf("Redirecting all output to %s\n", optarg);
 					dup2(tracefile, 1);
 					dup2(tracefile, 2);
-					printf("Cntlm debug trace, version " VERSION);
+					printf("Cntlm debug trace, version %s", CNTLM_VERSION);
 #ifdef __CYGWIN__
 					printf(" windows/cygwin port");
 #endif
@@ -875,7 +875,7 @@ int main(int argc, char **argv) {
 	 * Help requested?
 	 */
 	if (help) {
-		printf("CNTLM - Accelerating NTLM Authentication Proxy version " VERSION "\n");
+		printf("CNTLM - Accelerating NTLM Authentication Proxy version %s\n", CNTLM_VERSION);
 		printf("Copyright (c) 2oo7-2o1o David Kubicek\n\n"
 			"This program comes with NO WARRANTY, to the extent permitted by law. You\n"
 			"may redistribute copies of it under the terms of the GNU GPL Version 2 or\n"

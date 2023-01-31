@@ -26,6 +26,8 @@
 
 #include "utils.h"
 
+#define CNTLM_VERSION "0.92.3"
+
 #define CFG_OPTION(cf, opt, var, size) { char *__tmp = NULL; if ((__tmp=config_pop(cf, opt))) { strlcpy(var, __tmp, size); } if (__tmp) free(__tmp); }
 #define CFG_DEFAULT(cf, opt, var, size) { char *__tmp = NULL; if ((__tmp=config_pop(cf, opt)) && !strlen(var)) { strlcpy(var, __tmp, size); } if (__tmp) free(__tmp); }
 

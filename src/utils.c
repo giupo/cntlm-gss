@@ -30,7 +30,10 @@
 #include <ctype.h>
 #include <syslog.h>
 
-#include "config/config.h"
+// TODO(giupo) Serve?
+//#include "config/config.h"
+#include "configured_constants.h"
+
 #include "swap.h"
 #include "utils.h"
 #include "socket.h"

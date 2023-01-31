@@ -41,9 +41,9 @@ struct auth_s {
 	int hashntlm2;
 	int hashnt;
 	int hashlm;
-#ifdef ENABLE_KERBEROS	
+//#ifdef ENABLE_KERBEROS	// enabel KERBEROS ON by default
 	int haskrb;
-#endif
+//#endif
 	uint32_t flags;
 };
 

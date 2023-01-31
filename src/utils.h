@@ -28,7 +28,9 @@
 #include <pthread.h>
 #include <netinet/in.h>
 
-#include "config/config.h"
+// TODO(giupo): vediamo se serve
+// #include "config/config.h"
+#include "configured_constants.h"
 
 #define BUFSIZE			4096
 #define MINIBUF_SIZE		50

@@ -25,7 +25,9 @@
 #include <netinet/in.h>
 #include <stdint.h>
 
-#include "config/config.h"
+//TODO(giupo): vediamo se serve
+//#include "config/config.h"
+#include "configured_constants.h"
 
 #if config_socklen_t != 1
 #define socklen_t uint32_t
