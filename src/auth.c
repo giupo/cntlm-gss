@@ -92,34 +92,34 @@ struct auth_s *dup_auth(struct auth_s *creds, int fullcopy) {
 void dump_auth(struct auth_s *creds) {
 	char *tmp;
 
-	cntlm_log(LOG_INFO, "Credentials structure dump:\n");
+	ZF_LOGI("Credentials structure dump:");
 	if (creds == NULL) {
-		cntlm_log(LOG_INFO, "Struct is not allocated!\n");
+		ZF_LOGI("Struct is not allocated!");
 		return;
 	}
 
-	cntlm_log(LOG_INFO, "User:       %s\n", creds->user);
-	cntlm_log(LOG_INFO, "Domain:     %s\n", creds->domain);
-	cntlm_log(LOG_INFO, "Wks:        %s\n", creds->workstation);
-	cntlm_log(LOG_INFO, "HashNTLMv2: %d\n", creds->hashntlm2);
-	cntlm_log(LOG_INFO, "HashNT:     %d\n", creds->hashnt);
-	cntlm_log(LOG_INFO, "HashLM:     %d\n", creds->hashlm);
-	cntlm_log(LOG_INFO, "Flags:      %X\n", creds->flags);
+	ZF_LOGI("User:       %s", creds->user);
+	ZF_LOGI("Domain:     %s", creds->domain);
+	ZF_LOGI("Wks:        %s", creds->workstation);
+	ZF_LOGI("HashNTLMv2: %d", creds->hashntlm2);
+	ZF_LOGI("HashNT:     %d", creds->hashnt);
+	ZF_LOGI("HashLM:     %d", creds->hashlm);
+	ZF_LOGI("Flags:      %X", creds->flags);
 	if (creds->passntlm2) {
 		tmp = printmem(creds->passntlm2, 16, 8);
-		cntlm_log(LOG_INFO, "PassNTLMv2: %s\n", tmp);
+		ZF_LOGI( "PassNTLMv2: %s", tmp);
 		free(tmp);
 	}
 
 	if (creds->passnt) {
 		tmp = printmem(creds->passnt, 16, 8);
-		cntlm_log(LOG_INFO, "PassNT:     %s\n", tmp);
+		ZF_LOGI( "PassNT:     %s", tmp);
 		free(tmp);
 	}
 
 	if (creds->passlm) {
 		tmp = printmem(creds->passlm, 16, 8);
-		cntlm_log(LOG_INFO, "PassLM:     %s\n\n", tmp);
+		ZF_LOGI( "PassLM:     %s\n", tmp);
 		free(tmp);
 	}
 }

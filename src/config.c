@@ -48,7 +48,7 @@ config_t config_open(const char *fname) {
 	char section[MINIBUF_SIZE] = "global";
 	int i, j, slen, len, quote;
 
-	//cntlm_log(LOG_INFO, "sizeof = %d\n", sizeof(globals) / sizeof(char *));
+	//ZF_LOGI( "sizeof = %d\n", sizeof(globals) / sizeof(char *));
 
 	fp = fopen(fname, "r");
 	if (!fp)
@@ -136,8 +136,7 @@ config_t config_open(const char *fname) {
 			trimr(value);
 		}
 
-		if (debug)
-			cntlm_log(LOG_INFO, "section: %s, %s = '%s'\n", section, key, value);
+    ZF_LOGD("section: %s, %s = '%s'", section, key, value);
 		rc->options = hlist_add(rc->options, key, value, HLIST_NOALLOC, HLIST_NOALLOC);
 	}
 

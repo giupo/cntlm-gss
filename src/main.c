@@ -113,12 +113,11 @@ plist_t noproxy_list = NULL;			/* proxy_thread() */
  */
 void sighandler(int p) {
 	if (!quit)
-		cntlm_log(LOG_INFO, "Signal %d received, issuing clean shutdown\n", p);
+		ZF_LOGE( "Signal %d received, issuing clean shutdown\n", p);
 	else
-		cntlm_log(LOG_INFO, "Signal %d received, forcing shutdown\n", p);
+		ZF_LOGE( "Signal %d received, forcing shutdown\n", p);
 
-	if (quit++ || debug)
-		quit++;
+	if (quit++ || debug) quit++;
 }
 
 /*
@@ -152,7 +151,7 @@ int parent_add(char *parent, int port) {
 	 * No port argument and not parsed from proxy?
 	 */
 	if (!port) {
-		cntlm_log(LOG_ERR, "Invalid proxy specification %s.\n", parent);
+		ZF_LOGE( "Invalid proxy specification %s.\n", parent);
 		free(proxy);
 		myexit(1);
 	}
@@ -161,9 +160,9 @@ int parent_add(char *parent, int port) {
 	 * Try to resolve proxy address
 	 *
 	if (debug)
-		cntlm_log(LOG_INFO, "Resolving proxy %s...\n", proxy);
+		ZF_LOGE( "Resolving proxy %s...\n", proxy);
 	if (!so_resolv(&host, proxy)) {
-		cntlm_log(LOG_ERR, "Cannot resolve proxy %s, discarding.\n", parent);
+		ZF_LOGE( "Cannot resolve proxy %s, discarding.\n", parent);
 		free(proxy);
 		return 0;
 	}
@@ -192,7 +191,7 @@ void listen_add(const char *service, plist_t *list, char *spec, int gateway) {
 	if (p < len-1) {
 		tmp = substr(spec, 0, p);
 		if (!so_resolv(&source, tmp)) {
-			cntlm_log(LOG_ERR, "Cannot resolve listen address %s\n", tmp);
+			ZF_LOGE( "Cannot resolve listen address %s\n", tmp);
 			myexit(1);
 		}
 		free(tmp);
@@ -203,14 +202,14 @@ void listen_add(const char *service, plist_t *list, char *spec, int gateway) {
 	}
 
 	if (!port) {
-		cntlm_log(LOG_ERR, "Invalid listen port %s.\n", tmp);
+		ZF_LOGE( "Invalid listen port %s.\n", tmp);
 		myexit(1);
 	}
 
 	i = so_listen(port, source);
 	if (i > 0) {
 		*list = plist_add(*list, i, NULL);
-		cntlm_log(LOG_INFO, "%s listening on %s:%d\n", service, inet_ntoa(source), port);
+		ZF_LOGE( "%s listening on %s:%d\n", service, inet_ntoa(source), port);
 	}
 }
 
@@ -235,7 +234,7 @@ void tunnel_add(plist_t *list, char *spec, int gateway) {
 	pos = 0;
 	if (count == 4) {
 		if (!so_resolv(&source, field[pos])) {
-                        cntlm_log(LOG_ERR, "Cannot resolve tunel bind address: %s\n", field[pos]);
+                        ZF_LOGE( "Cannot resolve tunel bind address: %s\n", field[pos]);
                         myexit(1);
                 }
 		pos++;
@@ -245,12 +244,12 @@ void tunnel_add(plist_t *list, char *spec, int gateway) {
 	if (count-pos == 3) {
 		port = atoi(field[pos]);
 		if (port == 0) {
-			cntlm_log(LOG_ERR, "Invalid tunnel local port: %s\n", field[pos]);
+			ZF_LOGE( "Invalid tunnel local port: %s\n", field[pos]);
 			myexit(1);
 		}
 
 		if (!strlen(field[pos+1]) || !strlen(field[pos+2])) {
-			cntlm_log(LOG_ERR, "Invalid tunnel target: %s:%s\n", field[pos+1], field[pos+2]);
+			ZF_LOGE( "Invalid tunnel target: %s:%s\n", field[pos+1], field[pos+2]);
 			myexit(1);
 		}
 
@@ -262,11 +261,11 @@ void tunnel_add(plist_t *list, char *spec, int gateway) {
 		i = so_listen(port, source);
 		if (i > 0) {
 			*list = plist_add(*list, i, tmp);
-			cntlm_log(LOG_INFO, "New tunnel from %s:%d to %s\n", inet_ntoa(source), port, tmp);
+			ZF_LOGE( "New tunnel from %s:%d to %s\n", inet_ntoa(source), port, tmp);
 		} else
 			free(tmp);
 	} else {
-		cntlm_log(LOG_INFO, "Tunnel specification incorrect ([laddress:]lport:rserver:rport).\n");
+		ZF_LOGE( "Tunnel specification incorrect ([laddress:]lport:rserver:rport).\n");
 		myexit(1);
 	}
 
@@ -282,7 +281,7 @@ plist_t noproxy_add(plist_t list, char *spec) {
 	tok = strtok_r(spec, ", ", &save);
 	while ( tok != NULL ) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Adding no-proxy for: '%s'\n", tok);
+			ZF_LOGE( "Adding no-proxy for: '%s'\n", tok);
 		list = plist_add(list, 0, strdup(tok));
 		tok = strtok_r(NULL, ", ", &save);
 	}
@@ -298,10 +297,10 @@ int noproxy_match(const char *addr) {
 		if (list->aux && strlen(list->aux)
 				&& fnmatch(list->aux, addr, 0) == 0) {
 			if (debug)
-				cntlm_log(LOG_INFO, "MATCH: %s (%s)\n", addr, (char *)list->aux);
+				ZF_LOGE( "MATCH: %s (%s)\n", addr, (char *)list->aux);
 			return 1;
 		} else if (debug)
-			cntlm_log(LOG_INFO, "   NO: %s (%s)\n", addr, (char *)list->aux);
+			ZF_LOGE( "   NO: %s (%s)\n", addr, (char *)list->aux);
 
 		list = list->next;
 	}
@@ -323,8 +322,8 @@ void *proxy_thread(void *thread_data) {
 		keep_alive = 0;
 
 		if (debug) {
-			cntlm_log(LOG_INFO, "\n******* Round 1 C: %d *******\n", cd);
-			cntlm_log(LOG_INFO, "Reading headers (%d)...\n", cd);
+			ZF_LOGE( "\n******* Round 1 C: %d *******\n", cd);
+			ZF_LOGE( "Reading headers (%d)...\n", cd);
 		}
 
 		request = new_rr_data();
@@ -350,7 +349,7 @@ void *proxy_thread(void *thread_data) {
 				ret = forward_request(thread_data, request);
 
 			if (debug)
-				cntlm_log(LOG_INFO, "proxy_thread: request rc = %p\n", (void *)ret);
+				ZF_LOGE( "proxy_thread: request rc = %p\n", (void *)ret);
 		} while (ret != NULL && ret != (void *)-1);
 
 		free_rr_data(request);
@@ -637,7 +636,7 @@ void *socks5_thread(void *thread_data) {
 		w = write(cd, bs, 10);
 	}
 
-	cntlm_log(LOG_DEBUG, "%s SOCKS %s", inet_ntoa(caddr.sin_addr), thost);
+	ZF_LOGD( "%s SOCKS %s", inet_ntoa(caddr.sin_addr), thost);
 
 	/*
 	 * Let's give them bi-directional connection they asked for
@@ -706,10 +705,11 @@ int main(int argc, char **argv) {
 	cuid = new(MINIBUF_SIZE);
 	cauth = new(MINIBUF_SIZE);
 
+
 #if config_endian == 0
-	cntlm_log(LOG_INFO, "Starting cntlm version %s for BIG endian\n", CNTLM_VERSION);
+	ZF_LOGE( "Starting cntlm version %s for BIG endian\n", CNTLM_VERSION);
 #else
-	cntlm_log(LOG_INFO, "Starting cntlm version %s for LITTLE endian\n", CNTLM_VERSION);
+	ZF_LOGE( "Starting cntlm version %s for LITTLE endian\n", CNTLM_VERSION);
 #endif
 
 	while ((i = getopt(argc, argv, ":-:a:c:d:fghIl:p:r:su:vw:A:BD:F:G:HL:M:N:O:P:R:S:T:U:")) != -1) {
@@ -727,7 +727,7 @@ int main(int argc, char **argv) {
 				break;
 			case 'c':
 				if (!(cf = config_open(optarg))) {
-					cntlm_log(LOG_ERR, "Cannot access specified config file: %s\n", optarg);
+					ZF_LOGE( "Cannot access specified config file: %s\n", optarg);
 					myexit(1);
 				}
 				break;
@@ -829,17 +829,17 @@ int main(int argc, char **argv) {
 					fprintf(stderr, "Cannot create trace file.\n");
 					myexit(1);
 				} else {
-					cntlm_log(LOG_INFO, "Redirecting all output to %s\n", optarg);
+					ZF_LOGE( "Redirecting all output to %s\n", optarg);
 					dup2(tracefile, 1);
 					dup2(tracefile, 2);
-					cntlm_log(LOG_INFO, "Cntlm debug trace, version %s", CNTLM_VERSION);
+					ZF_LOGE( "Cntlm debug trace, version %s", CNTLM_VERSION);
 #ifdef __CYGWIN__
-					cntlm_log(LOG_INFO, " windows/cygwin port");
+					ZF_LOGE( " windows/cygwin port");
 #endif
-					cntlm_log(LOG_INFO, ".\nCommand line: ");
+					ZF_LOGE( ".\nCommand line: ");
 					for (i = 0; i < argc; ++i)
-						cntlm_log(LOG_INFO, "%s ", argv[i]);
-					cntlm_log(LOG_INFO, "\n");
+						ZF_LOGE( "%s ", argv[i]);
+					ZF_LOGE( "\n");
 				}
 				break;
 			case 'U':
@@ -871,8 +871,8 @@ int main(int argc, char **argv) {
 	 * Help requested?
 	 */
 	if (help) {
-		cntlm_log(LOG_INFO, "CNTLM - Accelerating NTLM Authentication Proxy version %s\n", CNTLM_VERSION);
-		cntlm_log(LOG_INFO, "Copyright (c) 2oo7-2o1o David Kubicek\n\n"
+		ZF_LOGE( "CNTLM - Accelerating NTLM Authentication Proxy version %s\n", CNTLM_VERSION);
+		ZF_LOGE( "Copyright (c) 2oo7-2o1o David Kubicek\n\n"
 			"This program comes with NO WARRANTY, to the extent permitted by law. You\n"
 			"may redistribute copies of it under the terms of the GNU GPL Version 2 or\n"
 			"newer. For more information about these matters, see the file LICENSE.\n"
@@ -967,9 +967,9 @@ int main(int argc, char **argv) {
 #endif
 		if (debug) {
 			if (cf)
-				cntlm_log(LOG_INFO, "Default config file opened successfully\n");
+				ZF_LOGE( "Default config file opened successfully\n");
 			else
-				cntlm_log(LOG_ERR, "Could not open default config file\n");
+				ZF_LOGE( "Could not open default config file\n");
 		}
 	}
 #endif
@@ -1032,7 +1032,7 @@ int main(int argc, char **argv) {
 						HLIST_ALLOC, HLIST_NOALLOC);
 				free(head);
 			} else
-				cntlm_log(LOG_ERR, "Invalid header format: %s\n", tmp);
+				ZF_LOGE( "Invalid header format: %s\n", tmp);
 
 			free(tmp);
 		}
@@ -1099,7 +1099,7 @@ int main(int argc, char **argv) {
 		while ((tmp = config_pop(cf, "SOCKS5Users"))) {
 			head = strchr(tmp, ':');
 			if (!head) {
-				cntlm_log(LOG_ERR, "Invalid username:password format for SOCKS5User: %s\n", tmp);
+				ZF_LOGE( "Invalid username:password format for SOCKS5User: %s\n", tmp);
 			} else {
 				head[0] = 0;
 				users_list = hlist_add(users_list, tmp, head+1, HLIST_ALLOC, HLIST_ALLOC);
@@ -1128,7 +1128,7 @@ int main(int argc, char **argv) {
 		 */
 		list = cf->options;
 		while (list) {
-			cntlm_log(LOG_INFO, "Ignoring config file option: %s\n", list->key);
+			ZF_LOGE( "Ignoring config file option: %s\n", list->key);
 			list = list->next;
 		}
 	}
@@ -1151,7 +1151,7 @@ int main(int argc, char **argv) {
 		if (!strlen(cworkstation))
 			strlcpy(cworkstation, "cntlm", MINIBUF_SIZE);
 
-		cntlm_log(LOG_INFO, "Workstation name used: %s\n", cworkstation);
+		ZF_LOGE( "Workstation name used: %s\n", cworkstation);
 	}
 
 	/*
@@ -1184,23 +1184,23 @@ int main(int argc, char **argv) {
 			g_creds->hashnt = 0;
 			g_creds->hashlm = 0;
 			g_creds->hashntlm2 = 0;
-			cntlm_log(LOG_INFO, "Forcing GSS auth.\n");
+			ZF_LOGE( "Forcing GSS auth.\n");
 #endif				
 		} else {
-			cntlm_log(LOG_ERR, "Unknown NTLM auth combination.\n");
+			ZF_LOGE( "Unknown NTLM auth combination.\n");
 			myexit(1);
 		}
 	}
 
 	if (socksd_list && !users_list)
-		cntlm_log(LOG_WARNING, "SOCKS5 proxy will NOT require any authentication\n");
+		ZF_LOGW( "SOCKS5 proxy will NOT require any authentication\n");
 
 	if (!magic_detect)
-		cntlm_log(LOG_INFO, "Using following NTLM hashes: NTLMv2(%d) NT(%d) LM(%d)\n",
+		ZF_LOGE( "Using following NTLM hashes: NTLMv2(%d) NT(%d) LM(%d)\n",
 			g_creds->hashntlm2, g_creds->hashnt, g_creds->hashlm);
 
 	if (cflags) {
-		cntlm_log(LOG_INFO, "Using manual NTLM flags: 0x%X\n", swap32(cflags));
+		ZF_LOGE( "Using manual NTLM flags: 0x%X\n", swap32(cflags));
 		g_creds->flags = cflags;
 	}
 
@@ -1208,7 +1208,7 @@ int main(int argc, char **argv) {
 	 * Last chance to get password from the user
 	 */
 	if (interactivehash || magic_detect || (interactivepwd && !ntlmbasic)) {
-		cntlm_log(LOG_INFO, "Password: ");
+		ZF_LOGE( "Password: ");
 		tcgetattr(0, &termold);
 		termnew = termold;
 		termnew.c_lflag &= ~(ISIG | ECHO);
@@ -1221,7 +1221,7 @@ int main(int argc, char **argv) {
 			if (cpassword[i - 1] == '\r')
 				cpassword[i - 1] = 0;
 		}
-		cntlm_log(LOG_INFO, "\n");
+		ZF_LOGE( "\n");
 	}
 
 	/*
@@ -1235,7 +1235,7 @@ int main(int argc, char **argv) {
 		if (strlen(cpassntlm2)) {
 			tmp = scanmem(cpassntlm2, 8);
 			if (!tmp) {
-				cntlm_log(LOG_ERR, "Invalid PassNTLMv2 hash, terminating\n");
+				ZF_LOGE( "Invalid PassNTLMv2 hash, terminating\n");
 				exit(1);
 			}
 			auth_memcpy(g_creds, passntlm2, tmp, 16);
@@ -1244,7 +1244,7 @@ int main(int argc, char **argv) {
 		if (strlen(cpassnt)) {
 			tmp = scanmem(cpassnt, 8);
 			if (!tmp) {
-				cntlm_log(LOG_ERR, "Invalid PassNT hash, terminating\n");
+				ZF_LOGE( "Invalid PassNT hash, terminating\n");
 				exit(1);
 			}
 			auth_memcpy(g_creds, passnt, tmp, 16);
@@ -1253,7 +1253,7 @@ int main(int argc, char **argv) {
 		if (strlen(cpasslm)) {
 			tmp = scanmem(cpasslm, 8);
 			if (!tmp) {
-				cntlm_log(LOG_ERR, "Invalid PassLM hash, terminating\n");
+				ZF_LOGE( "Invalid PassLM hash, terminating\n");
 				exit(1);
 			}
 			auth_memcpy(g_creds, passlm, tmp, 16);
@@ -1279,7 +1279,7 @@ int main(int argc, char **argv) {
 #ifdef ENABLE_KERBEROS
 	g_creds->haskrb |= check_credential();
 	if(g_creds->haskrb & KRB_CREDENTIAL_AVAILABLE)
-		cntlm_log(LOG_INFO, "Using cached credential for GSS auth.\n");
+		ZF_LOGE( "Using cached credential for GSS auth.\n");
 #endif
 
 	auth_strcpy(g_creds, user, cuser);
@@ -1307,19 +1307,19 @@ int main(int argc, char **argv) {
 	if (interactivehash) {
 		if (g_creds->passlm) {
 			tmp = printmem(g_creds->passlm, 16, 8);
-			cntlm_log(LOG_INFO, "PassLM          %s\n", tmp);
+			ZF_LOGE( "PassLM          %s\n", tmp);
 			free(tmp);
 		}
 
 		if (g_creds->passnt) {
 			tmp = printmem(g_creds->passnt, 16, 8);
-			cntlm_log(LOG_INFO, "PassNT          %s\n", tmp);
+			ZF_LOGE( "PassNT          %s\n", tmp);
 			free(tmp);
 		}
 
 		if (g_creds->passntlm2) {
 			tmp = printmem(g_creds->passntlm2, 16, 8);
-			cntlm_log(LOG_INFO, "PassNTLMv2      %s    # Only for user '%s', domain '%s'\n",
+			ZF_LOGE( "PassNTLMv2      %s    # Only for user '%s', domain '%s'\n",
 				tmp, g_creds->user, g_creds->domain);
 			free(tmp);
 		}
@@ -1336,7 +1336,7 @@ int main(int argc, char **argv) {
 			((g_creds->hashnt && !g_creds->passnt)
 		     || (g_creds->hashlm && !g_creds->passlm)
 		     || (g_creds->hashntlm2 && !g_creds->passntlm2))) {
-		cntlm_log(LOG_ERR, "Parent proxy account password (or required hashes) missing.\n");
+		ZF_LOGE( "Parent proxy account password (or required hashes) missing.\n");
 		myexit(1);
 	}
 
@@ -1348,7 +1348,7 @@ int main(int argc, char **argv) {
 	 */
 	if (asdaemon) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Forking into background as requested.\n");
+			ZF_LOGE( "Forking into background as requested.\n");
 
 		i = fork();
 		if (i == -1) {
@@ -1371,13 +1371,13 @@ int main(int argc, char **argv) {
 	}
 
 	/*
-	 * Reinit syslog logging to include our PID, after forking
+	 * Reinit logging to include our PID, after forking
 	 * it is going to be OK
 	 */
 	if (asdaemon) {
-		cntlm_log(LOG_INFO, "Daemon ready");
+		ZF_LOGE( "Daemon ready");
 	} else {
-		cntlm_log(LOG_INFO, "Cntlm ready, staying in the foreground");
+		ZF_LOGE( "Cntlm ready, staying in the foreground");
 	}
 
 	/*
@@ -1385,19 +1385,19 @@ int main(int argc, char **argv) {
 	 */
 	if (strlen(cuid)) {
 		if (getuid() && geteuid()) {
-			cntlm_log(LOG_WARNING, "No root privileges; keeping identity %d:%d\n", getuid(), getgid());
+			ZF_LOGW( "No root privileges; keeping identity %d:%d\n", getuid(), getgid());
 		} else {
 			if (isdigit(cuid[0])) {
 				nuid = atoi(cuid);
 				ngid = nuid;
 				if (nuid <= 0) {
-					cntlm_log(LOG_ERR, "Numerical uid parameter invalid\n");
+					ZF_LOGE( "Numerical uid parameter invalid\n");
 					myexit(1);
 				}
 			} else {
 				pw = getpwnam(cuid);
 				if (!pw || !pw->pw_uid) {
-					cntlm_log(LOG_ERR, "Username %s in -U is invalid\n", cuid);
+					ZF_LOGE( "Username %s in -U is invalid\n", cuid);
 					myexit(1);
 				}
 				nuid = pw->pw_uid;
@@ -1405,9 +1405,9 @@ int main(int argc, char **argv) {
 			}
 			setgid(ngid);
 			i = setuid(nuid);
-			cntlm_log(LOG_INFO, "Changing uid:gid to %d:%d - %s\n", nuid, ngid, strerror(errno));
+			ZF_LOGE( "Changing uid:gid to %d:%d - %s\n", nuid, ngid, strerror(errno));
 			if (i) {
-				cntlm_log(LOG_ERR, "Terminating\n");
+				ZF_LOGE( "Terminating\n");
 				myexit(1);
 			}
 		}
@@ -1421,7 +1421,7 @@ int main(int argc, char **argv) {
 		umask(0);
 		cd = open(cpidfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (cd < 0) {
-			cntlm_log(LOG_ERR, "Error creating a new PID file\n");
+			ZF_LOGE( "Error creating a new PID file\n");
 			myexit(1);
 		}
 
@@ -1523,7 +1523,7 @@ int main(int argc, char **argv) {
 				cd = accept(i, (struct sockaddr *)&caddr, (socklen_t *)&clen);
 
 				if (cd < 0) {
-					cntlm_log(LOG_ERR, "Serious error during accept: %s\n", strerror(errno));
+					ZF_LOGE( "Serious error during accept: %s\n", strerror(errno));
 					continue;
 				}
 
@@ -1531,7 +1531,7 @@ int main(int argc, char **argv) {
 				 * Check main access control list.
 				 */
 				if (acl_check(rules, caddr.sin_addr) != ACL_ALLOW) {
-					cntlm_log(LOG_WARNING, "Connection denied for %s:%d\n",
+					ZF_LOGW( "Connection denied for %s:%d\n",
 						inet_ntoa(caddr.sin_addr), ntohs(caddr.sin_port));
 					tmp = gen_denied_page(inet_ntoa(caddr.sin_addr));
 					w = write(cd, tmp, strlen(tmp));
@@ -1544,7 +1544,7 @@ int main(int argc, char **argv) {
 				 * Log peer IP if it's not localhost
 				 *
 				 * if (debug || (gateway && caddr.sin_addr.s_addr != htonl(INADDR_LOOPBACK)))
-				 * 	cntlm_log(LOG_INFO, "Connection accepted from %s:%d\n",
+				 * 	ZF_LOGE( "Connection accepted from %s:%d\n",
 				 * 	inet_ntoa(caddr.sin_addr), ntohs(caddr.sin_port));
 				 */
 
@@ -1578,12 +1578,12 @@ int main(int argc, char **argv) {
 				pthread_attr_destroy(&pattr);
 
 				if (tid)
-					cntlm_log(LOG_ERR, "Serious error during pthread_create: %d\n", tid);
+					ZF_LOGE( "Serious error during pthread_create: %d\n", tid);
 				else
 					tc++;
 			}
 		} else if (cd < 0 && !quit)
-			cntlm_log(LOG_ERR, "Serious error during select: %s\n", strerror(errno));
+			ZF_LOGE( "Serious error during select: %s\n", strerror(errno));
 
 		if (threads_list) {
 			pthread_mutex_lock(&threads_mtx);
@@ -1595,9 +1595,9 @@ int main(int argc, char **argv) {
 				if (!tid) {
 					tj++;
 					if (debug)
-						cntlm_log(LOG_INFO, "Joining thread %lu; rc: %d\n", t->key, i);
+						ZF_LOGE( "Joining thread %lu; rc: %d\n", t->key, i);
 				} else
-					cntlm_log(LOG_ERR, "Serious error during pthread_join: %d\n", tid);
+					ZF_LOGE( "Serious error during pthread_join: %d\n", tid);
 
 				free(t);
 				t = tmp;
@@ -1611,7 +1611,7 @@ bailout:
 	if (strlen(cpidfile))
 		unlink(cpidfile);
 
-	cntlm_log(LOG_INFO, "Terminating with %d active threads\n", tc - tj);
+	ZF_LOGE( "Terminating with %d active threads\n", tc - tj);
 	pthread_mutex_lock(&connection_mtx);
 	plist_free(connection_list);
 	pthread_mutex_unlock(&connection_mtx);

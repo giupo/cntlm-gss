@@ -50,7 +50,7 @@ int host_connect(const char *hostname, int port) {
 	errno = 0;
 	if (!so_resolv(&addr, hostname)) {
 		//if (debug)
-		//	cntlm_log(LOG_INFO, "so_resolv: %s failed (%d: %s)\n", hostname, h_errno, hstrerror(h_errno));
+		//	ZF_LOGI( "so_resolv: %s failed (%d: %s)\n", hostname, h_errno, hstrerror(h_errno));
 		return -1;
 	}
 
@@ -87,7 +87,7 @@ int www_authenticate(int sd, rr_data_t request, rr_data_t response, struct auth_
 		goto bailout;
 
 	if (debug) {
-		cntlm_log(LOG_INFO, "\nSending WWW auth request...\n");
+		ZF_LOGI( "\nSending WWW auth request...\n");
 		hlist_dump(auth->headers);
 	}
 
@@ -95,7 +95,7 @@ int www_authenticate(int sd, rr_data_t request, rr_data_t response, struct auth_
 		goto bailout;
 
 	if (debug)
-		cntlm_log(LOG_INFO, "\nReading WWW auth response...\n");
+		ZF_LOGI( "\nReading WWW auth response...\n");
 
 	/*
 	 * Get NTLM challenge
@@ -127,13 +127,13 @@ int www_authenticate(int sd, rr_data_t request, rr_data_t response, struct auth_
 					request->headers = hlist_mod(request->headers, "Authorization", buf, 1);
 					free(tmp);
 				} else {
-					cntlm_log(LOG_ERR, "No target info block. Cannot do NTLMv2!\n");
+					ZF_LOGE("No target info block. Cannot do NTLMv2!\n");
 					response->errmsg = "Invalid NTLM challenge from web server";
 					free(challenge);
 					goto bailout;
 				}
 			} else {
-				cntlm_log(LOG_ERR, "Server returning invalid challenge!\n");
+				ZF_LOGE("Server returning invalid challenge!\n");
 				response->errmsg = "Invalid NTLM challenge from web server";
 				free(challenge);
 				goto bailout;
@@ -141,7 +141,7 @@ int www_authenticate(int sd, rr_data_t request, rr_data_t response, struct auth_
 
 			free(challenge);
 		} else {
-			cntlm_log(LOG_WARNING, "No challenge in WWW-Authenticate!\n");
+			ZF_LOGW("No challenge in WWW-Authenticate!\n");
 			response->errmsg = "Web server reply missing NTLM challenge";
 			goto bailout;
 		}
@@ -150,14 +150,14 @@ int www_authenticate(int sd, rr_data_t request, rr_data_t response, struct auth_
 	}
 
 	if (debug)
-		cntlm_log(LOG_INFO, "\nSending WWW auth...\n");
+		ZF_LOGI( "\nSending WWW auth...\n");
 
 	if (!headers_send(sd, request)) {
 		goto bailout;
 	}
 
 	if (debug)
-		cntlm_log(LOG_INFO, "\nReading final server response...\n");
+		ZF_LOGI( "\nReading final server response...\n");
 
 	reset_rr_data(auth);
 	if (!headers_recv(sd, auth)) {
@@ -193,11 +193,11 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 	struct sockaddr_in caddr = ((struct thread_arg_s *)cdata)->addr;
 
 	if (debug)
-		cntlm_log(LOG_INFO, "Direct thread processing...\n");
+		ZF_LOGI( "Direct thread processing...\n");
 
 	sd = host_connect(request->hostname, request->port);
 	if (sd < 0) {
-		cntlm_log(LOG_WARNING, "Connection failed for %s:%d (%s)", request->hostname, request->port, strerror(errno));
+		ZF_LOGW("Connection failed for %s:%d (%s)", request->hostname, request->port, strerror(errno));
 		tmp = gen_502_page(request->http, strerror(errno));
 		w = write(cd, tmp, strlen(tmp));
 		free(tmp);
@@ -241,8 +241,8 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 		for (loop = 0; loop < 2; ++loop) {
 			if (data[loop]->empty) {				// Isn't this the first loop with request supplied by caller?
 				if (debug) {
-					cntlm_log(LOG_INFO, "\n******* Round %d C: %d, S: %d *******\n", loop+1, cd, sd);
-					cntlm_log(LOG_INFO, "Reading headers (%d)...\n", *rsocket[loop]);
+					ZF_LOGI( "\n******* Round %d C: %d, S: %d *******\n", loop+1, cd, sd);
+					ZF_LOGI( "Reading headers (%d)...\n", *rsocket[loop]);
 				}
 				if (!headers_recv(*rsocket[loop], data[loop])) {
 					free_rr_data(data[0]);
@@ -260,7 +260,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 			if (loop == 0 && hostname && data[0]->hostname
 					&& (strcasecmp(hostname, data[0]->hostname) || port != data[0]->port)) {
 				if (debug)
-					cntlm_log(LOG_INFO, "\n******* D RETURN: %s *******\n", data[0]->url);
+					ZF_LOGI( "\n******* D RETURN: %s *******\n", data[0]->url);
 
 				rc = dup_rr_data(data[0]);
 				free_rr_data(data[0]);
@@ -272,7 +272,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 				hlist_dump(data[loop]->headers);
 
 			if (loop == 0 && data[0]->req) {
-				cntlm_log(LOG_DEBUG, "%s %s %s", inet_ntoa(caddr.sin_addr), data[0]->method, data[0]->url);
+				ZF_LOGD( "%s %s %s", inet_ntoa(caddr.sin_addr), data[0]->method, data[0]->url);
 				
 				/*
 				 * Convert full proxy request URL into a relative URL
@@ -291,7 +291,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 				 * Try to get auth from client if present
 				 */
 				if (http_parse_basic(data[0]->headers, "Authorization", tcreds) > 0 && debug)
-					cntlm_log(LOG_INFO, "NTLM-to-basic: Credentials parsed: %s\\%s at %s\n", tcreds->domain, tcreds->user, tcreds->workstation);
+					ZF_LOGI( "NTLM-to-basic: Credentials parsed: %s\\%s at %s\n", tcreds->domain, tcreds->user, tcreds->workstation);
 			}
 
 			/*
@@ -299,7 +299,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 			 */
 			if (loop == 0 && CONNECT(data[0])) {
 				if (debug)
-					cntlm_log(LOG_INFO, "CONNECTing...\n");
+					ZF_LOGI( "CONNECTing...\n");
 
 				data[1]->empty = 0;
 				data[1]->req = 0;
@@ -323,7 +323,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 				 */
 				if (hlist_subcmp(data[1]->headers, "Connection", "close")) {
 					if (debug)
-						cntlm_log(LOG_INFO, "Reconnect before WWW auth\n");
+						ZF_LOGI( "Reconnect before WWW auth\n");
 					close(sd);
 					sd = host_connect(data[0]->hostname, data[0]->port);
 					if (sd < 0) {
@@ -337,7 +337,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 				}
 				if (!www_authenticate(*wsocket[0], data[0], data[1], tcreds)) {
 					if (debug)
-						cntlm_log(LOG_INFO, "WWW auth connection error.\n");
+						ZF_LOGI( "WWW auth connection error.\n");
 
 					tmp = gen_502_page(data[1]->http, data[1]->errmsg ? data[1]->errmsg : "Error during WWW-Authenticate");
 					w = write(cd, tmp, strlen(tmp));
@@ -386,7 +386,7 @@ rr_data_t direct_request(void *cdata, rr_data_t request) {
 			}
 
 			if (debug)
-				cntlm_log(LOG_INFO, "Sending headers (%d)...\n", *wsocket[loop]);
+				ZF_LOGI( "Sending headers (%d)...\n", *wsocket[loop]);
 
 			/*
 			 * Send headers
@@ -440,9 +440,9 @@ void direct_tunnel(void *thread_data) {
 	if (sd <= 0)
 		goto bailout;
 
-	cntlm_log(LOG_DEBUG, "%s FORWARD %s", inet_ntoa(caddr.sin_addr), thost);
+	ZF_LOGD( "%s FORWARD %s", inet_ntoa(caddr.sin_addr), thost);
 	if (debug)
-		cntlm_log(LOG_INFO, "Portforwarding to %s for client %d...\n", thost, cd);
+		ZF_LOGI( "Portforwarding to %s for client %d...\n", thost, cd);
 
 	tunnel(cd, sd);
 

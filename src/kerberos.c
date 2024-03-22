@@ -46,10 +46,11 @@
 
 #include <string.h>
 #include <stdio.h>
-#include <syslog.h>
+// #include <syslog.h>
 #include <gssapi/gssapi.h>
 #include <stdlib.h>
 
+#include "logger.h"
 /*
  * Function: display_ctx_flags
  *
@@ -68,17 +69,17 @@
 
 void display_ctx_flags(OM_uint32 flags) {
 	if (flags & GSS_C_DELEG_FLAG)
-		cntlm_log(LOG_INFO, "context flag: GSS_C_DELEG_FLAG\n");
+		ZF_LOGE( "context flag: GSS_C_DELEG_FLAG\n");
 	if (flags & GSS_C_MUTUAL_FLAG)
-		cntlm_log(LOG_INFO, "context flag: GSS_C_MUTUAL_FLAG\n");
+		ZF_LOGE( "context flag: GSS_C_MUTUAL_FLAG\n");
 	if (flags & GSS_C_REPLAY_FLAG)
-		cntlm_log(LOG_INFO, "context flag: GSS_C_REPLAY_FLAG\n");
+		ZF_LOGE( "context flag: GSS_C_REPLAY_FLAG\n");
 	if (flags & GSS_C_SEQUENCE_FLAG)
-		cntlm_log(LOG_INFO, "context flag: GSS_C_SEQUENCE_FLAG\n");
+		ZF_LOGE( "context flag: GSS_C_SEQUENCE_FLAG\n");
 	if (flags & GSS_C_CONF_FLAG)
-		cntlm_log(LOG_INFO, "context flag: GSS_C_CONF_FLAG\n");
+		ZF_LOGE( "context flag: GSS_C_CONF_FLAG\n");
 	if (flags & GSS_C_INTEG_FLAG)
-		cntlm_log(LOG_INFO, "context flag: GSS_C_INTEG_FLAG\n");
+		ZF_LOGE( "context flag: GSS_C_INTEG_FLAG\n");
 }
 
 static void display_status_1(char *m, OM_uint32 code, int type) {
@@ -91,7 +92,7 @@ static void display_status_1(char *m, OM_uint32 code, int type) {
 		maj_stat = gss_display_status(&min_stat, code, type, GSS_C_NULL_OID,
 				&msg_ctx, &msg);
 		if (1)
-			cntlm_log(LOG_ERR, "GSS-API error %s: %s\n", m, (char *) msg.value);
+			ZF_LOGE( "GSS-API error %s: %s\n", m, (char *) msg.value);
 		(void) gss_release_buffer(&min_stat, &msg);
 
 		if (!msg_ctx)
@@ -134,7 +135,7 @@ void display_name(char* txt, gss_name_t *name) {
 		display_status("Display name", maj_stat, min_stat);
 	}
 
-	cntlm_log(LOG_INFO, txt, (char *) out_name.value);
+	ZF_LOGE( txt, (char *) out_name.value);
 
 	(void) gss_release_buffer(&min_stat, &out_name);
 
@@ -224,7 +225,7 @@ int client_establish_context(char *service_name,
 	}
 
 	if (debug)
-		cntlm_log(LOG_INFO, "Got token (size=%d)\n", (int) send_tok->length);
+		ZF_LOGE( "Got token (size=%d)\n", (int) send_tok->length);
 
 	maj_stat = gss_delete_sec_context(&min_stat, &gss_context, GSS_C_NO_BUFFER);
 	if (maj_stat != GSS_S_COMPLETE) {
@@ -245,7 +246,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 
 	if (credentials->haskrb == KRB_KO) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Skipping already failed gss auth for %s\n",
+			ZF_LOGE( "Skipping already failed gss auth for %s\n",
 					proxy->hostname);
 		return 0;
 	}
@@ -257,7 +258,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 			if (!(credentials->haskrb & KRB_CREDENTIAL_AVAILABLE)){
 				//no credential -> no token
 				if (debug)
-					cntlm_log(LOG_INFO, "No valid credential available\n");
+					ZF_LOGE( "No valid credential available\n");
 				return 0;
 			}
 //		}
@@ -277,7 +278,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 				BUFSIZE);
 
 		if (debug) {
-			cntlm_log(LOG_INFO, "Token B64 (size=%d)... %s\n",
+			ZF_LOGE( "Token B64 (size=%d)... %s\n",
 					(int) strlen(token), token);
 			display_ctx_flags(ret_flags);
 		}
@@ -290,7 +291,7 @@ int acquire_kerberos_token(proxy_t* proxy, struct auth_s *credentials,
 		credentials->haskrb = KRB_KO;
 
 		if (debug)
-			cntlm_log(LOG_INFO, "No valid token acquired for %s\n", service_name);
+			ZF_LOGE( "No valid token acquired for %s\n", service_name);
 
 		rc=0;
 	}

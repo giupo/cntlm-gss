@@ -101,7 +101,7 @@ int headers_recv(int fd, rr_data_t data) {
 		goto bailout;
 
 	if (debug)
-		cntlm_log(LOG_INFO, "HEAD: %s", buf);
+		ZF_LOGE( "HEAD: %s", buf);
 
 	/*
 	 * Are we reading HTTP request (from client) or response (from server)?
@@ -175,7 +175,7 @@ int headers_recv(int fd, rr_data_t data) {
 
 	} else {
 		if (debug)
-			cntlm_log(LOG_INFO, "headers_recv: Unknown header (%s).\n", orig);
+			ZF_LOGE( "headers_recv: Unknown header (%s).\n", orig);
 		i = -4;
 		goto bailout;
 	}
@@ -201,7 +201,7 @@ int headers_recv(int fd, rr_data_t data) {
 				data->headers = hlist_add(data->headers, "Host", host, HLIST_ALLOC, HLIST_ALLOC);
 		} else {
 			if (debug)
-				cntlm_log(LOG_INFO, "headers_recv: no host name (%s)\n", orig);
+				ZF_LOGE( "headers_recv: no host name (%s)\n", orig);
 			i = -6;
 			goto bailout;
 		}
@@ -233,7 +233,7 @@ bailout:
 
 	if (i <= 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "headers_recv: fd %d error %d\n", fd, i);
+			ZF_LOGE( "headers_recv: fd %d error %d\n", fd, i);
 		return 0;
 	}
 
@@ -303,7 +303,7 @@ int headers_send(int fd, rr_data_t data) {
 
 	if (i <= 0 || i != len+2) {
 		if (debug)
-			cntlm_log(LOG_INFO, "headers_send: fd %d warning %d (connection closed)\n", fd, i);
+			ZF_LOGE( "headers_send: fd %d warning %d (connection closed)\n", fd, i);
 		return 0;
 	}
 
@@ -334,7 +334,7 @@ int data_send(int dst, int src, length_t len) {
 			c += i;
 
 		if (dst >= 0 && debug)
-			cntlm_log(LOG_INFO, "data_send: read %d of %d / %d of %lld (errno = %s)\n", i, block, c, len, i < 0 ? strerror(errno) : "ok");
+			ZF_LOGE( "data_send: read %d of %d / %d of %lld (errno = %s)\n", i, block, c, len, i < 0 ? strerror(errno) : "ok");
 
 		if (dst >= 0 && so_closed(dst)) {
 			i = -999;
@@ -344,7 +344,7 @@ int data_send(int dst, int src, length_t len) {
 		if (dst >= 0 && i > 0) {
 			j = write(dst, buf, i);
 			if (debug)
-				cntlm_log(LOG_INFO, "data_send: wrote %d of %d\n", j, i);
+				ZF_LOGE( "data_send: wrote %d of %d\n", j, i);
 		}
 
 	} while (i > 0 && j > 0 && (len == -1 || c <  len));
@@ -356,7 +356,7 @@ int data_send(int dst, int src, length_t len) {
 			return 1;
 
 		if (debug)
-			cntlm_log(LOG_INFO, "data_send: fds %d:%d warning %d (connection closed)\n", dst, src, i);
+			ZF_LOGE( "data_send: fds %d:%d warning %d (connection closed)\n", dst, src, i);
 		return 0;
 	}
 
@@ -382,7 +382,7 @@ int chunked_data_send(int dst, int src) {
 		i = so_recvln(src, &buf, &bsize);
 		if (i <= 0) {
 			if (debug)
-				cntlm_log(LOG_INFO, "chunked_data_send: aborting, read error\n");
+				ZF_LOGE( "chunked_data_send: aborting, read error\n");
 			free(buf);
 			return 0;
 		}
@@ -391,7 +391,7 @@ int chunked_data_send(int dst, int src) {
 
 		if (!isspace(*err) && *err != ';') {
 			if (debug)
-				cntlm_log(LOG_INFO, "chunked_data_send: aborting, chunk size format error\n");
+				ZF_LOGE( "chunked_data_send: aborting, chunk size format error\n");
 			free(buf);
 			return 0;
 		}
@@ -402,7 +402,7 @@ int chunked_data_send(int dst, int src) {
 		if (csize)
 			if (!data_send(dst, src, csize+2)) {
 				if (debug)
-					cntlm_log(LOG_INFO, "chunked_data_send: aborting, data_send failed\n");
+					ZF_LOGE( "chunked_data_send: aborting, data_send failed\n");
 
 				free(buf);
 				return 0;
@@ -432,7 +432,7 @@ int tunnel(int cd, int sd) {
 	buf = new(BUFSIZE);
 
 	if (debug)
-		cntlm_log(LOG_INFO, "tunnel: select cli: %d, srv: %d\n", cd, sd);
+		ZF_LOGE( "tunnel: select cli: %d, srv: %d\n", cd, sd);
 
 	do {
 		FD_ZERO(&set);
@@ -549,21 +549,21 @@ int http_body_send(int writefd, int readfd, rr_data_t request, rr_data_t respons
 		 */
 		if (hlist_subcmp(current->headers, "Transfer-Encoding", "chunked")) {
 			if (debug)
-				cntlm_log(LOG_INFO, "Chunked body included.\n");
+				ZF_LOGE( "Chunked body included.\n");
 
 			rc = chunked_data_send(writefd, readfd);
 			if (debug)
 				printf(rc ? "Chunked body sent.\n" : "Could not chunk send whole body\n");
 		} else {
 			if (debug)
-				cntlm_log(LOG_INFO, "Body included. Length: %lld\n", bodylen);
+				ZF_LOGE( "Body included. Length: %lld\n", bodylen);
 
 			rc = data_send(writefd, readfd, bodylen);
 			if (debug)
 				printf(rc ? "Body sent.\n" : "Could not send whole body\n");
 		}
 	} else if (debug)
-		cntlm_log(LOG_INFO, "No body.\n");
+		ZF_LOGE( "No body.\n");
 
 	return rc;
 }
@@ -580,11 +580,11 @@ int http_body_drop(int fd, rr_data_t response) {
 	if (bodylen) {
 		if (hlist_subcmp(response->headers, "Transfer-Encoding", "chunked")) {
 			if (debug)
-				cntlm_log(LOG_INFO, "Discarding chunked body.\n");
+				ZF_LOGE( "Discarding chunked body.\n");
 			rc = chunked_data_send(-1, fd);
 		} else {
 			if (debug)
-				cntlm_log(LOG_INFO, "Discarding %lld bytes.\n", bodylen);
+				ZF_LOGE( "Discarding %lld bytes.\n", bodylen);
 			rc = data_send(-1, fd, bodylen);
 		}
 	}

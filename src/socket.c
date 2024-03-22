@@ -61,12 +61,12 @@ int so_resolv(struct in_addr *host, const char *name) {
 	int rc = getaddrinfo(name, NULL, &hints, &res);
 	if (rc != 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_resolv: %s failed: %s (%d)\n", name, gai_strerror(rc), rc);
+			ZF_LOGE( "so_resolv: %s failed: %s (%d)\n", name, gai_strerror(rc), rc);
 		return 0;
 	}
 
 	if (debug)
-		cntlm_log(LOG_INFO, "Resolve %s:\n", name);
+		ZF_LOGE( "Resolve %s:\n", name);
 	int addr_set = 0;
 	for (p = res; p != NULL; p = p->ai_next) {
 		struct sockaddr_in *ad = (struct sockaddr_in*)(p->ai_addr);
@@ -78,10 +78,10 @@ int so_resolv(struct in_addr *host, const char *name) {
 			memcpy(host, &ad->sin_addr, sizeof(ad->sin_addr));
 			addr_set = 1;
 			if (debug)
-				cntlm_log(LOG_INFO, "  -> %s\n", inet_ntoa(ad->sin_addr));
+				ZF_LOGE( "  -> %s\n", inet_ntoa(ad->sin_addr));
 		} else
 			if (debug)
-				cntlm_log(LOG_INFO, "     %s\n", inet_ntoa(ad->sin_addr));
+				ZF_LOGE( "     %s\n", inet_ntoa(ad->sin_addr));
 	}
 
 	freeaddrinfo(res);
@@ -102,7 +102,7 @@ int so_connect(struct in_addr host, int port) {
 
 	if ((fd = socket(PF_INET, SOCK_STREAM, 0)) < 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_connect: create: %s\n", strerror(errno));
+			ZF_LOGE( "so_connect: create: %s\n", strerror(errno));
 		return -1;
 	}
 
@@ -113,7 +113,7 @@ int so_connect(struct in_addr host, int port) {
 
 	if ((flags = fcntl(fd, F_GETFL, 0)) < 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_connect: get flags: %s\n", strerror(errno));
+			ZF_LOGE( "so_connect: get flags: %s\n", strerror(errno));
 		close(fd);
 		return -1;
 	}
@@ -121,7 +121,7 @@ int so_connect(struct in_addr host, int port) {
 	/* NON-BLOCKING connect with timeout
 	if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) < 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_connect: set non-blocking: %s\n", strerror(errno));
+			ZF_LOGE( "so_connect: set non-blocking: %s\n", strerror(errno));
 		close(fd);
 		return -1;
 	}
@@ -130,28 +130,28 @@ int so_connect(struct in_addr host, int port) {
 	rc = connect(fd, (struct sockaddr *)&saddr, sizeof(saddr));
 
 	/*
-	cntlm_log(LOG_INFO, "connect = %d\n", rc);
+	ZF_LOGE( "connect = %d\n", rc);
 	if (rc < 0 && (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINPROGRESS)) {
 		FD_ZERO(&fds);
 		FD_SET(fd, &fds);
 		tv.tv_sec = 10;
 		tv.tv_usec = 0;
-		cntlm_log(LOG_INFO, "select!\n");
+		ZF_LOGE( "select!\n");
 		rc = select(fd+1, NULL, &fds, NULL, &tv) - 1;
-		cntlm_log(LOG_INFO, "select = %d\n", rc);
+		ZF_LOGE( "select = %d\n", rc);
 	}
 	*/
 
 	if (rc < 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_connect: %s\n", strerror(errno));
+			ZF_LOGE( "so_connect: %s\n", strerror(errno));
 		close(fd);
 		return -1;
 	}
 
 	if (fcntl(fd, F_SETFL, flags & ~O_NONBLOCK) < 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_connect: set blocking: %s\n", strerror(errno));
+			ZF_LOGE( "so_connect: set blocking: %s\n", strerror(errno));
 		close(fd);
 		return -1;
 	}
@@ -171,7 +171,7 @@ int so_listen(int port, struct in_addr source) {
 	fd = socket(PF_INET, SOCK_STREAM, 0);
 	if (fd < 0) {
 		if (debug)
-			cntlm_log(LOG_INFO, "so_listen: new socket: %s\n", strerror(errno));
+			ZF_LOGE( "so_listen: new socket: %s\n", strerror(errno));
 		close(fd);
 		return -1;
 	}
@@ -184,7 +184,7 @@ int so_listen(int port, struct in_addr source) {
 	saddr.sin_addr.s_addr = source.s_addr;
 
 	if (bind(fd, (struct sockaddr *)&saddr, sizeof(saddr))) {
-		cntlm_log(LOG_ERR, "Cannot bind port %d: %s!\n", port, strerror(errno));
+		ZF_LOGE( "Cannot bind port %d: %s!\n", port, strerror(errno));
 		close(fd);
 		return -1;
 	}
@@ -269,7 +269,7 @@ int so_recvln(int fd, char **buf, int *size) {
 		 */
 		if (len == *size-1 && c != '\n') {
 			if (debug)
-				cntlm_log(LOG_INFO, "so_recvln(%d): realloc %d\n", fd, *size*2);
+				ZF_LOGE( "so_recvln(%d): realloc %d\n", fd, *size*2);
 			*size *= 2;
 			tmp = realloc(*buf, *size);
 			if (tmp == NULL)

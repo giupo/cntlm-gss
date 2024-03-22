@@ -55,9 +55,9 @@ void myexit(int rc) {
 
 void croak(const char *msg, int console) {
 	if (console)
-		cntlm_log(LOG_INFO, "%s", msg);
+		ZF_LOGE( "%s", msg);
 	else
-		cntlm_log(LOG_ERR, "%s", msg);
+		ZF_LOGE( "%s", msg);
 	
 	myexit(1);
 }
@@ -143,7 +143,7 @@ void plist_dump(plist_t list) {
 
 	t = list;
 	while (t) {
-		cntlm_log(LOG_INFO, "List data: %lu => 0x%8p\n", (unsigned long int)t->key, t->aux);
+		ZF_LOGE( "List data: %lu => 0x%8p\n", (unsigned long int)t->key, t->aux);
 		t = t->next;
 	}
 }
@@ -472,7 +472,7 @@ void hlist_dump(hlist_t list) {
 
 	t = list;
 	while (t) {
-		cntlm_log(LOG_INFO, "%-30s => %s\n", t->key, t->value);
+		ZF_LOGE( "%-30s => %s\n", t->key, t->value);
 		t = t->next;
 	}
 }

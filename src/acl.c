@@ -21,7 +21,7 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <syslog.h>
+// #include <syslog.h>
 #include <string.h>
 #include <stdlib.h>
 #include <netinet/in.h>
@@ -30,7 +30,7 @@
 #include "acl.h"
 #include "socket.h"
 #include "swap.h"
-
+#include "logger.h"
 /*
  * TODO: retest ACLs on big-endian
  */
@@ -54,7 +54,7 @@ int acl_add(plist_t *rules, char *spec, enum acl_t acl) {
 		spec[i] = 0;
 		mask = strtol(spec+i+1, &tmp, 10);
 		if (mask < 0 || mask > 32 || spec[i+1] == 0 || *tmp != 0) {
-			cntlm_log(LOG_ERR, "ACL netmask for %s is invalid\n", spec);
+			ZF_LOGE("ACL netmask for %s is invalid\n", spec);
 			free(aux);
 			free(spec);
 			return 0;
@@ -68,7 +68,7 @@ int acl_add(plist_t *rules, char *spec, enum acl_t acl) {
 		if (!strcmp("0", spec)) {
 			source.s_addr = 0;
 		} else if (!so_resolv(&source, spec)) {
-			cntlm_log(LOG_ERR, "ACL source address %s is invalid\n", spec);
+			ZF_LOGE("ACL source address %s is invalid\n", spec);
 			free(aux);
 			free(spec);
 			return 0;
@@ -78,10 +78,11 @@ int acl_add(plist_t *rules, char *spec, enum acl_t acl) {
 	aux->ip = source.s_addr;
 	aux->mask = mask;
 	mask = swap32(~(((uint64_t)1 << (32-mask)) - 1));
-	if ((source.s_addr & mask) != source.s_addr)
-		cntlm_log(LOG_WARNING, "Subnet definition might be incorrect: %s/%d\n", inet_ntoa(source), aux->mask);
-
-	cntlm_log(LOG_INFO, "New ACL rule: %s %s/%d\n", (acl == ACL_ALLOW ? "allow" : "deny"), inet_ntoa(source), aux->mask);
+	if ((source.s_addr & mask) != source.s_addr) {
+		ZF_LOGW("Subnet definition might be incorrect: %s/%d\n", inet_ntoa(source), aux->mask);
+  }
+  
+	ZF_LOGI("New ACL rule: %s %s/%d\n", (acl == ACL_ALLOW ? "allow" : "deny"), inet_ntoa(source), aux->mask);
 	*rules = plist_add(*rules, acl, (char *)aux);
 
 	free(spec);

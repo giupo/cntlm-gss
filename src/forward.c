@@ -69,7 +69,7 @@ int proxy_connect(struct auth_s *credentials) {
 	pthread_mutex_lock(&parent_mtx);
 	if (parent_curr == 0) {
 		aux = (proxy_t *)plist_get(parent_list, ++parent_curr);
-		cntlm_log(LOG_INFO, "Using proxy %s:%d\n", aux->hostname, aux->port);
+		ZF_LOGE( "Using proxy %s:%d\n", aux->hostname, aux->port);
 	}
 	pthread_mutex_unlock(&parent_mtx);
 
@@ -79,11 +79,11 @@ int proxy_connect(struct auth_s *credentials) {
 		pthread_mutex_unlock(&parent_mtx);
 		if (aux->resolved == 0) {
 			if (debug)
-				cntlm_log(LOG_INFO, "Resolving proxy %s...\n", aux->hostname);
+				ZF_LOGE( "Resolving proxy %s...\n", aux->hostname);
 			if (so_resolv(&aux->host, aux->hostname)) {
 				aux->resolved = 1;
 			} else {
-				cntlm_log(LOG_ERR, "Cannot resolve proxy %s\n", aux->hostname);
+				ZF_LOGE( "Cannot resolve proxy %s\n", aux->hostname);
 			}
 		}
 
@@ -100,7 +100,7 @@ int proxy_connect(struct auth_s *credentials) {
 				parent_curr = 0;
 			aux = (proxy_t *)plist_get(parent_list, ++parent_curr);
 			pthread_mutex_unlock(&parent_mtx);
-			cntlm_log(LOG_ERR, "Proxy connect failed, will try %s:%d\n", aux->hostname, aux->port);
+			ZF_LOGE( "Proxy connect failed, will try %s:%d\n", aux->hostname, aux->port);
 
 #ifdef ENABLE_KERBEROS
 		} else {
@@ -111,7 +111,7 @@ int proxy_connect(struct auth_s *credentials) {
 	} while (i <= 0 && ++loop < parent_count);
 
 	if (i <= 0 && loop >= parent_count)
-		cntlm_log(LOG_ERR, "No proxy on the list works. You lose.\n");
+		ZF_LOGE( "No proxy on the list works. You lose.\n");
 
 	/*
 	 * We have to invalidate the cached connections if we moved to a different proxy
@@ -164,7 +164,7 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 		//we assume that if kdc releases a ticket for the proxy, then the proxy is configured for kerberos auth
 		//drawback is that later in the code cntlm logs that no auth is required because we have already authenticated
 		if (debug)
-			cntlm_log(LOG_INFO, "Using Negotiation ...\n");
+			ZF_LOGE( "Using Negotiation ...\n");
 	}
 	else {
 #endif
@@ -202,7 +202,7 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 		 * request using HEAD!!
 		 */
 		if (debug)
-			cntlm_log(LOG_INFO, "Will send just a probe request.\n");
+			ZF_LOGE( "Will send just a probe request.\n");
 		pretend407 = 1;
 	}
 
@@ -218,7 +218,7 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 	auth->headers = hlist_del(auth->headers, "Transfer-Encoding");
 
 	if (debug) {
-		cntlm_log(LOG_INFO, "\nSending PROXY auth request...\n");
+		ZF_LOGE( "\nSending PROXY auth request...\n");
 		hlist_dump(auth->headers);
 	}
 
@@ -227,7 +227,7 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 	}
 
 	if (debug)
-		cntlm_log(LOG_INFO, "\nReading PROXY auth response...\n");
+		ZF_LOGE( "\nReading PROXY auth response...\n");
 
 	/*
 	 * Return response if requested. "auth" is used to get it,
@@ -262,7 +262,7 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 #ifdef ENABLE_KERBEROS		
 			if(g_creds->haskrb && strncasecmp(tmp, "NEGOTIATE", 9) == 0 && acquire_kerberos_token(curr_proxy, credentials, buf)) {
 				if (debug)
-					cntlm_log(LOG_INFO, "Using Negotiation ...\n");
+					ZF_LOGE( "Using Negotiation ...\n");
 
 				request->headers = hlist_mod(request->headers, "Proxy-Authorization", buf, 1);
 				free(tmp);
@@ -279,12 +279,12 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 						request->headers = hlist_mod(request->headers, "Proxy-Authorization", buf, 1);
 						free(tmp);
 					} else {
-						cntlm_log(LOG_ERR, "No target info block. Cannot do NTLMv2!\n");
+						ZF_LOGE( "No target info block. Cannot do NTLMv2!\n");
 						free(challenge);
 						goto bailout;
 					}
 				} else {
-					cntlm_log(LOG_ERR, "Proxy returning invalid challenge!\n");
+					ZF_LOGE( "Proxy returning invalid challenge!\n");
 					free(challenge);
 					goto bailout;
 				}
@@ -294,11 +294,11 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 			}
 #endif			
 		} else {
-			cntlm_log(LOG_WARNING, "No Proxy-Authenticate, NTLM/Negotiate not supported?\n");
+			ZF_LOGW( "No Proxy-Authenticate, NTLM/Negotiate not supported?\n");
 		}
 	} else if (pretend407) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Client %s - forcing second request.\n", HEAD(request) ? "sent HEAD" : "has a body");
+			ZF_LOGE( "Client %s - forcing second request.\n", HEAD(request) ? "sent HEAD" : "has a body");
 		if (response)
 			response->code = 407;				// See explanation above
 		if (!http_body_drop(*sd, auth)) {
@@ -312,7 +312,7 @@ int proxy_authenticate(int *sd, rr_data_t request, rr_data_t response, struct au
 	 */
 	if (so_closed(*sd)) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Proxy closed on us, reconnect.\n");
+			ZF_LOGE( "Proxy closed on us, reconnect.\n");
 		close(*sd);
 		*sd = proxy_connect(credentials);
 		if (*sd < 0) {
@@ -385,7 +385,7 @@ beginning:
 	rsocket[1] = wsocket[0] = &sd;
 
 	if (debug) {
-		cntlm_log(LOG_INFO, "Thread processing%s...\n", retry ? " (retry)" : "");
+		ZF_LOGE( "Thread processing%s...\n", retry ? " (retry)" : "");
 		pthread_mutex_lock(&connection_mtx);
 		plist_dump(connection_list);
 		pthread_mutex_unlock(&connection_mtx);
@@ -404,7 +404,7 @@ beginning:
 	pthread_mutex_unlock(&connection_mtx);
 	if (i) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Found autenticated connection %d!\n", i);
+			ZF_LOGE( "Found autenticated connection %d!\n", i);
 		sd = i;
 		authok = 1;
 		was_cached = 1;
@@ -466,8 +466,8 @@ beginning:
 		for (loop = 0; loop < 2; ++loop) {
 			if (data[loop]->empty) {				// Isn't this the first loop with request supplied by caller?
 				if (debug) {
-					cntlm_log(LOG_INFO, "\n******* Round %d C: %d, S: %d (authok=%d, noauth=%d) *******\n", loop+1, cd, sd, authok, noauth);
-					cntlm_log(LOG_INFO, "Reading headers (%d)...\n", *rsocket[loop]);
+					ZF_LOGE( "\n******* Round %d C: %d, S: %d (authok=%d, noauth=%d) *******\n", loop+1, cd, sd, authok, noauth);
+					ZF_LOGE( "Reading headers (%d)...\n", *rsocket[loop]);
 				}
 				if (!headers_recv(*rsocket[loop], data[loop])) {
 					free_rr_data(data[0]);
@@ -490,7 +490,7 @@ beginning:
 			if (loop == 0 && hostname && data[0]->hostname
 					&& strcasecmp(hostname, data[0]->hostname)) {
 				if (debug)
-					cntlm_log(LOG_INFO, "\n******* F RETURN: %s *******\n", data[0]->url);
+					ZF_LOGE( "\n******* F RETURN: %s *******\n", data[0]->url);
 				if (authok)
 					proxy_alive = 1;
 
@@ -504,7 +504,7 @@ beginning:
 				hlist_dump(data[loop]->headers);
 
 			if (loop == 0 && data[0]->req)
-				cntlm_log(LOG_DEBUG, "%s %s %s", inet_ntoa(caddr.sin_addr), data[0]->method, data[0]->url);
+				ZF_LOGD( "%s %s %s", inet_ntoa(caddr.sin_addr), data[0]->method, data[0]->url);
 
 shortcut:
 			/*
@@ -519,10 +519,10 @@ shortcut:
 				 */
 				if (http_parse_basic(data[loop]->headers, "Proxy-Authorization", tcreds) > 0) {
 					if (debug)
-						cntlm_log(LOG_INFO, "NTLM-to-basic: Credentials parsed: %s\\%s at %s\n", tcreds->domain, tcreds->user, tcreds->workstation);
+						ZF_LOGE( "NTLM-to-basic: Credentials parsed: %s\\%s at %s\n", tcreds->domain, tcreds->user, tcreds->workstation);
 				} else if (ntlmbasic) {
 					if (debug)
-						cntlm_log(LOG_INFO, "NTLM-to-basic: Returning client auth request.\n");
+						ZF_LOGE( "NTLM-to-basic: Returning client auth request.\n");
 
 					tmp = gen_407_page(data[loop]->http);
 					w = write(cd, tmp, strlen(tmp));
@@ -564,7 +564,7 @@ shortcut:
 			if (loop == 0 && data[0]->req && !authok && !noauth) {
 				if (!proxy_authenticate(wsocket[0], data[0], data[1], tcreds)) {
 					if (debug)
-						cntlm_log(LOG_INFO, "Proxy auth connection error.\n");
+						ZF_LOGE( "Proxy auth connection error.\n");
 					free_rr_data(data[0]);
 					free_rr_data(data[1]);
 					rc = (void *)-1;
@@ -587,7 +587,7 @@ shortcut:
 				 */
 				if (data[1]->code != 407) {		// || !hlist_subcmp(data[1]->headers, "Proxy-Connection", "keep-alive")) {
 					if (debug)
-						cntlm_log(LOG_INFO, "Proxy auth not requested - just forwarding.\n");
+						ZF_LOGE( "Proxy auth not requested - just forwarding.\n");
 					if (data[1]->code < 400)
 						noauth = 1;
 					loop = 1;
@@ -608,7 +608,7 @@ shortcut:
 			 */
 			if (loop == 1 && data[1]->code == 407 && (was_cached || noauth)) {
 				if (debug)
-					cntlm_log(LOG_INFO, "\nFinal reply is 407 - retrying (cached=%d, noauth=%d).\n", was_cached, noauth);
+					ZF_LOGE( "\nFinal reply is 407 - retrying (cached=%d, noauth=%d).\n", was_cached, noauth);
 				if (tcreds)
 					free(tcreds);
 
@@ -667,7 +667,7 @@ shortcut:
 
 			if (plugin & PLUG_SENDHEAD) {
 				if (debug) {
-					cntlm_log(LOG_INFO, "Sending headers (%d)...\n", *wsocket[loop]);
+					ZF_LOGE( "Sending headers (%d)...\n", *wsocket[loop]);
 					if (loop == 0)
 						hlist_dump(data[loop]->headers);
 				}
@@ -691,7 +691,7 @@ shortcut:
 			 */
 			if (loop == 1 && CONNECT(data[0]) && data[1]->code == 200) {
 				if (debug)
-					cntlm_log(LOG_INFO, "Ok CONNECT response. Tunneling...\n");
+					ZF_LOGE( "Ok CONNECT response. Tunneling...\n");
 
 				tunnel(cd, sd);
 				free_rr_data(data[0]);
@@ -720,7 +720,7 @@ shortcut:
 				proxy_alive = hlist_subcmp(data[loop]->headers, "Proxy-Connection", "keep-alive");
 				if (!proxy_alive) {
 					if (debug)
-						cntlm_log(LOG_INFO, "PROXY CLOSING CONNECTION\n");
+						ZF_LOGE( "PROXY CLOSING CONNECTION\n");
 					rc = (void *)-1;
 				}
 			}
@@ -740,13 +740,13 @@ bailout:
 		free(hostname);
 
 	if (debug) {
-		cntlm_log(LOG_INFO, "forward_request: palive=%d, authok=%d, ntlm=%d, closed=%d\n", proxy_alive, authok, ntlmbasic, so_closed(sd));
-		cntlm_log(LOG_INFO, "\nThread finished.\n");
+		ZF_LOGE( "forward_request: palive=%d, authok=%d, ntlm=%d, closed=%d\n", proxy_alive, authok, ntlmbasic, so_closed(sd));
+		ZF_LOGE( "\nThread finished.\n");
 	}
 
 	if (proxy_alive && authok && !ntlmbasic && !so_closed(sd)) {
 		if (debug)
-			cntlm_log(LOG_INFO, "Storing the connection for reuse (%d:%d).\n", cd, sd);
+			ZF_LOGE( "Storing the connection for reuse (%d:%d).\n", cd, sd);
 		pthread_mutex_lock(&connection_mtx);
 		connection_list = plist_add(connection_list, sd, (void *)tcreds);
 		pthread_mutex_unlock(&connection_mtx);
@@ -791,7 +791,7 @@ int prepare_http_connect(int sd, struct auth_s *credentials, const char *thost) 
 	}
 
 	if (debug)
-		cntlm_log(LOG_INFO, "Starting authentication...\n");
+		ZF_LOGE( "Starting authentication...\n");
 
 	if (proxy_authenticate(&sd, data1, data2, credentials)) {
 		/*
@@ -799,20 +799,20 @@ int prepare_http_connect(int sd, struct auth_s *credentials, const char *thost) 
 		 */
 		if (data2->code == 407) {
 			if (debug) {
-				cntlm_log(LOG_INFO, "Sending real request:\n");
+				ZF_LOGE( "Sending real request:\n");
 				hlist_dump(data1->headers);
 			}
 			if (!headers_send(sd, data1)) {
-				cntlm_log(LOG_INFO, "Sending request failed!\n");
+				ZF_LOGE( "Sending request failed!\n");
 				goto bailout;
 			}
 
 			if (debug)
-				cntlm_log(LOG_INFO, "\nReading real response:\n");
+				ZF_LOGE( "\nReading real response:\n");
 			reset_rr_data(data2);
 			if (!headers_recv(sd, data2)) {
 				if (debug)
-					cntlm_log(LOG_INFO, "Reading response failed!\n");
+					ZF_LOGE( "Reading response failed!\n");
 				goto bailout;
 			}
 			if (debug)
@@ -821,15 +821,15 @@ int prepare_http_connect(int sd, struct auth_s *credentials, const char *thost) 
 
 		if (data2->code == 200) {
 			if (debug)
-				cntlm_log(LOG_INFO, "Ok CONNECT response. Tunneling...\n");
+				ZF_LOGE( "Ok CONNECT response. Tunneling...\n");
 			rc = 1;
 		} else if (data2->code == 407) {
-			cntlm_log(LOG_ERR, "Authentication for tunnel %s failed!\n", thost);
+			ZF_LOGE( "Authentication for tunnel %s failed!\n", thost);
 		} else {
-			cntlm_log(LOG_ERR, "Request for CONNECT to %s denied!\n", thost);
+			ZF_LOGE( "Request for CONNECT to %s denied!\n", thost);
 		}
 	} else
-		cntlm_log(LOG_ERR, "Tunnel requests failed!\n");
+		ZF_LOGE( "Tunnel requests failed!\n");
 
 bailout:
 	free_rr_data(data1);
@@ -852,9 +852,9 @@ void forward_tunnel(void *thread_data) {
 	if (sd <= 0)
 		goto bailout;
 
-	cntlm_log(LOG_DEBUG, "%s TUNNEL %s", inet_ntoa(caddr.sin_addr), thost);
+	ZF_LOGD( "%s TUNNEL %s", inet_ntoa(caddr.sin_addr), thost);
 	if (debug)
-		cntlm_log(LOG_INFO, "Tunneling to %s for client %d...\n", thost, cd);
+		ZF_LOGE( "Tunneling to %s for client %d...\n", thost, cd);
 
 	if (prepare_http_connect(sd, tcreds, thost))
 		tunnel(cd, sd);
@@ -888,7 +888,7 @@ void magic_auth_detect(const char *url) {
 	copy_auth(tcreds, g_creds, /* fullcopy */ 1);
 
 	if (!tcreds->passnt || !tcreds->passlm || !tcreds->passntlm2) {
-		cntlm_log(LOG_INFO, "Cannot detect NTLM dialect - password or all its hashes must be defined, try -I\n");
+		ZF_LOGE( "Cannot detect NTLM dialect - password or all its hashes must be defined, try -I\n");
 		exit(1);
 	}
 
@@ -918,11 +918,11 @@ void magic_auth_detect(const char *url) {
 		tcreds->hashntlm2 = prefs[i][2];
 		tcreds->flags = prefs[i][3];
 
-		cntlm_log(LOG_INFO, "Config profile %2d/%d... ", i+1, MAGIC_TESTS);
+		ZF_LOGE( "Config profile %2d/%d... ", i+1, MAGIC_TESTS);
 
 		nc = proxy_connect(NULL);
 		if (nc <= 0) {
-			cntlm_log(LOG_INFO, "\nConnection to proxy failed, bailing out\n");
+			ZF_LOGE( "\nConnection to proxy failed, bailing out\n");
 			free_rr_data(res);
 			free_rr_data(req);
 			close(nc);
@@ -934,7 +934,7 @@ void magic_auth_detect(const char *url) {
 		c = proxy_authenticate(&nc, req, res, tcreds);
 		if (c && res->code != 407) {
 			ign++;
-			cntlm_log(LOG_INFO, "Auth not required (HTTP code: %d)\n", res->code);
+			ZF_LOGE( "Auth not required (HTTP code: %d)\n", res->code);
 			free_rr_data(res);
 			free_rr_data(req);
 			close(nc);
@@ -943,17 +943,17 @@ void magic_auth_detect(const char *url) {
 
 		reset_rr_data(res);
 		if (!headers_send(nc, req) || !headers_recv(nc, res)) {
-			cntlm_log(LOG_INFO, "Connection closed\n");
+			ZF_LOGE( "Connection closed\n");
 		} else {
 			if (res->code == 407) {
 				if (hlist_subcmp_all(res->headers, "Proxy-Authenticate", "NTLM") || hlist_subcmp_all(res->headers, "Proxy-Authenticate", "BASIC")) {
-					cntlm_log(LOG_INFO, "Credentials rejected\n");
+					ZF_LOGE( "Credentials rejected\n");
 				} else {
-					cntlm_log(LOG_INFO, "Proxy doesn't offer NTLM or BASIC\n");
+					ZF_LOGE( "Proxy doesn't offer NTLM or BASIC\n");
 					break;
 				}
 			} else {
-				cntlm_log(LOG_INFO, "OK (HTTP code: %d)\n", res->code);
+				ZF_LOGE( "OK (HTTP code: %d)\n", res->code);
 				if (found < 0) {
 					found = i;
 					free_rr_data(res);
@@ -970,27 +970,27 @@ void magic_auth_detect(const char *url) {
 	}
 
 	if (found > -1) {
-		cntlm_log(LOG_INFO, "----------------------------[ Profile %2d ]------\n", found);
-		cntlm_log(LOG_INFO, "Auth            %s\n", authstr[prefs[found][4]]);
+		ZF_LOGE( "----------------------------[ Profile %2d ]------\n", found);
+		ZF_LOGE( "Auth            %s\n", authstr[prefs[found][4]]);
 		if (prefs[found][3])
-			cntlm_log(LOG_INFO, "Flags           0x%x\n", prefs[found][3]);
+			ZF_LOGE( "Flags           0x%x\n", prefs[found][3]);
 		if (prefs[found][0]) {
-			cntlm_log(LOG_INFO, "PassNT          %s\n", tmp=printmem(tcreds->passnt, 16, 8));
+			ZF_LOGE( "PassNT          %s\n", tmp=printmem(tcreds->passnt, 16, 8));
 			free(tmp);
 		}
 		if (prefs[found][1]) {
-			cntlm_log(LOG_INFO, "PassLM          %s\n", tmp=printmem(tcreds->passlm, 16, 8));
+			ZF_LOGE( "PassLM          %s\n", tmp=printmem(tcreds->passlm, 16, 8));
 			free(tmp);
 		}
 		if (prefs[found][2]) {
-			cntlm_log(LOG_INFO, "PassNTLMv2      %s\n", tmp=printmem(tcreds->passntlm2, 16, 8));
+			ZF_LOGE( "PassNTLMv2      %s\n", tmp=printmem(tcreds->passntlm2, 16, 8));
 			free(tmp);
 		}
-		cntlm_log(LOG_INFO, "------------------------------------------------\n");
+		ZF_LOGE( "------------------------------------------------\n");
 	} else if (ign == MAGIC_TESTS) {
-		cntlm_log(LOG_INFO, "\nYour proxy is open, you don't need another proxy.\n");
+		ZF_LOGE( "\nYour proxy is open, you don't need another proxy.\n");
 	} else
-		cntlm_log(LOG_INFO, "\nWrong credentials, invalid URL or proxy doesn't support NTLM nor BASIC.\n");
+		ZF_LOGE( "\nWrong credentials, invalid URL or proxy doesn't support NTLM nor BASIC.\n");
 
 	if (host)
 		free(host);
